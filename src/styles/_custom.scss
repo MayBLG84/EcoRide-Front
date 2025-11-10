@@ -1,0 +1,9 @@
+@use 'variables' as *;
+
+body {
+  background-color: $secondary;
+}
+
+h1 {
+  color: $primary;
+}
