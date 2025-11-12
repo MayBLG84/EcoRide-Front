@@ -1,0 +1,18 @@
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == md {
+    @media (max-width: 758px) {
+      @content;
+    }
+  }
+  @if $breakpoint == lg {
+    @media (max-width: 1024px) {
+      @content;
+    }
+  }
+}
