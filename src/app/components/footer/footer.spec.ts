@@ -1,23 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { render, screen } from '@testing-library/angular';
 import { Footer } from './footer';
+import { provideRouter } from '@angular/router';
+import { Contact } from '../../pages/contact/contact';
+import { LegalMentions } from '../../pages/legal-mentions/legal-mentions';
 
 describe('Footer', () => {
-  let component: Footer;
-  let fixture: ComponentFixture<Footer>;
+  it('should render the footer component', async () => {
+    await render(Footer, {
+      providers: [
+        provideRouter([
+          { path: 'contact', component: Contact },
+          { path: 'legal-mentions', component: LegalMentions },
+        ]),
+      ],
+    });
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Footer]
-    })
-    .compileComponents();
+    // Checks if the links exist
+    const contactLink = screen.getByText('Contact');
+    const legalLink = screen.getByText('Mentions légales');
+    expect(contactLink).toBeTruthy();
+    expect(legalLink).toBeTruthy();
 
-    fixture = TestBed.createComponent(Footer);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    // Checks if the copyright text exists
+    const copyright = screen.getByText(/EcoRide © 2025/);
+    expect(copyright).toBeTruthy();
   });
 });
