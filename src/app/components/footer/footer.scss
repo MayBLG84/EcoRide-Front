@@ -1,0 +1,37 @@
+@use 'variables' as *;
+
+.footer {
+  background-color: $bg-dark;
+  width: 100%;
+  padding: 1.5rem 20px;
+}
+
+.foot-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  color: #fff;
+}
+
+.foot-container a {
+  color: #fff;
+  font-family: $font-content;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $tertiary;
+  }
+}
+
+.foot-container p {
+  color: #fff;
+  font-family: $font-content;
+  font-weight: 450;
+  font-size: 0.8rem;
+  margin: 0;
+}
