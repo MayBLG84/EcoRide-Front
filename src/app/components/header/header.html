@@ -9,7 +9,7 @@
   <nav class="desktop-menu">
     <a [routerLink]="['/']" routerLinkActive="active">Accueil</a>
     @if(isLoggedIn()) {
-    <a [routerLink]="['/my-space']" routerLinkActive="active">Mon space</a>
+    <a [routerLink]="['/', userId, 'my-space']" routerLinkActive="active">Mon espace</a>
     }
     <a [routerLink]="['/contact']" routerLinkActive="active">Contact</a>
     @if(isLoggedIn()) {
@@ -27,7 +27,7 @@
   <nav class="mobile-menu" [class.open]="menuOpen()">
     <a [routerLink]="['/']" (click)="closeMenu()">Accueil</a>
     @if(isLoggedIn()) {
-    <a [routerLink]="['/my-space']" (click)="closeMenu()">Mon space</a>
+    <a [routerLink]="['/', userId, 'my-space']" (click)="closeMenu()">Mon espace</a>
     }
     <a [routerLink]="['/contact']" (click)="closeMenu()">Contact</a>
     @if(isLoggedIn()) {
