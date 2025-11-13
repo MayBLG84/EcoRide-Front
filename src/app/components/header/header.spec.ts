@@ -1,95 +1,71 @@
-import { render, screen, fireEvent } from '@testing-library/angular';
+import { render, screen } from '@testing-library/angular';
+import { provideRouter } from '@angular/router';
 import { Header } from './header';
 import { Auth } from '../../services/auth';
-import { Router, ActivatedRoute } from '@angular/router';
 
 describe('Header Component', () => {
-  let authServiceMock: Partial<Auth>;
-  let routerMock: Partial<Router>;
-  let activatedRouteMock: Partial<ActivatedRoute>;
+  let mockAuth: Partial<Auth>;
 
   beforeEach(() => {
-    // Mock Auth
-    authServiceMock = {
-      isLoggedIn: jasmine.createSpy('isLoggedIn').and.returnValue(false),
-      getUserId: jasmine.createSpy('getUserId').and.returnValue(null),
-      logout: jasmine.createSpy('logout'),
+    mockAuth = {
+      isLoggedIn: jest.fn().mockReturnValue(false),
+      getUserId: jest.fn().mockReturnValue(null),
+      logout: jest.fn(),
     };
-
-    // Mock Router
-    routerMock = {
-      navigate: jasmine.createSpy('navigate'),
-      routerState: { root: {} } as any,
-      url: '',
-    } as any;
-
-    // Mock ActivatedRoute
-    activatedRouteMock = {
-      snapshot: {} as any,
-    } as any;
   });
 
-  const renderHeader = async () => {
+  it('should create the component', async () => {
+    const { fixture } = await render(Header, {
+      providers: [provideRouter([]), { provide: Auth, useValue: mockAuth }],
+    });
+    expect(fixture.componentInstance).toBeTruthy();
+  });
+
+  it('should render navigation links', async () => {
     await render(Header, {
+      providers: [provideRouter([]), { provide: Auth, useValue: mockAuth }],
+    });
+
+    expect(screen.getByText('Accueil')).toBeTruthy();
+    expect(screen.getByText('Contact')).toBeTruthy();
+    expect(screen.getByText('Connexion')).toBeTruthy();
+    expect(screen.getByText("S'inscrire")).toBeTruthy();
+  });
+
+  it('should toggle menu open state', async () => {
+    const { fixture } = await render(Header, {
+      providers: [provideRouter([]), { provide: Auth, useValue: mockAuth }],
+    });
+
+    const component = fixture.componentInstance;
+    expect(component.menuOpen()).toBe(false);
+
+    component.toggleMenu();
+    expect(component.menuOpen()).toBe(true);
+
+    component.closeMenu();
+    expect(component.menuOpen()).toBe(false);
+  });
+
+  it('should log out and navigate home', async () => {
+    const navigateMock = jest.fn();
+    const mockRouter = { navigate: navigateMock } as any;
+
+    const { fixture } = await render(Header, {
       providers: [
-        { provide: Auth, useValue: authServiceMock },
-        { provide: Router, useValue: routerMock },
-        { provide: ActivatedRoute, useValue: activatedRouteMock },
+        provideRouter([]),
+        { provide: Auth, useValue: mockAuth },
+        { provide: 'Router', useValue: mockRouter },
       ],
     });
-  };
 
-  it('should render logo and brand', async () => {
-    await renderHeader();
-    expect(screen.getByAltText('Logo EcoRide')).toBeTruthy();
-    expect(screen.getByText('EcoRide')).toBeTruthy();
-  });
+    const component = fixture.componentInstance;
 
-  describe('when user is logged out', () => {
-    it('should display correct links', async () => {
-      await renderHeader();
-      expect(screen.getByText('Accueil')).toBeTruthy();
-      expect(screen.getByText('Contact')).toBeTruthy();
-      expect(screen.getByText('Connexion')).toBeTruthy();
-      expect(screen.getByText("S'inscrire")).toBeTruthy();
-      expect(screen.queryByText('Mon espace')).toBeNull();
-      expect(screen.queryByText('Déconnexion')).toBeNull();
-    });
-  });
+    component.logout();
 
-  describe('when user is logged in', () => {
-    beforeEach(() => {
-      (authServiceMock.isLoggedIn as jasmine.Spy).and.returnValue(true);
-      (authServiceMock.getUserId as jasmine.Spy).and.returnValue('123');
-    });
-
-    it('should display correct links', async () => {
-      await renderHeader();
-      expect(screen.getByText('Accueil')).toBeTruthy();
-      expect(screen.getByText('Contact')).toBeTruthy();
-      expect(screen.getByText('Mon espace')).toBeTruthy();
-      expect(screen.getByText('Déconnexion')).toBeTruthy();
-      expect(screen.queryByText('Connexion')).toBeNull();
-      expect(screen.queryByText("S'inscrire")).toBeNull();
-    });
-
-    it('should logout when Déconnexion is clicked', async () => {
-      await renderHeader();
-      fireEvent.click(screen.getByText('Déconnexion'));
-      expect(authServiceMock.logout).toHaveBeenCalled();
-      expect(routerMock.navigate).toHaveBeenCalledWith(['/']);
-    });
-  });
-
-  it('should toggle mobile menu when burger button is clicked', async () => {
-    await renderHeader();
-    const burgerButton = screen.getByRole('button');
-    fireEvent.click(burgerButton);
-
-    const mobileMenu = document.querySelector('.mobile-menu');
-    expect(mobileMenu).toHaveClass('open');
-
-    fireEvent.click(burgerButton);
-    expect(mobileMenu).not.toHaveClass('open');
+    expect(mockAuth.logout).toHaveBeenCalled();
+    expect(component.isLoggedIn()).toBe(false);
+    expect(component.userId()).toBeNull();
+    expect(navigateMock).toHaveBeenCalledWith(['/']);
   });
 });

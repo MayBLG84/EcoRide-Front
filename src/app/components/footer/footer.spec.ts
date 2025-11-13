@@ -1,28 +1,41 @@
-import { render, screen } from '@testing-library/angular';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Footer } from './footer';
 import { provideRouter } from '@angular/router';
-import { Contact } from '../../pages/contact/contact';
-import { LegalMentions } from '../../pages/legal-mentions/legal-mentions';
+import { By } from '@angular/platform-browser';
 
-describe('Footer', () => {
-  it('should render the footer component', async () => {
-    await render(Footer, {
+describe('Footer Component', () => {
+  let fixture: ComponentFixture<Footer>;
+  let component: Footer;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Footer],
       providers: [
         provideRouter([
-          { path: 'contact', component: Contact },
-          { path: 'legal-mentions', component: LegalMentions },
+          { path: 'contact', component: Footer }, // mock route for test
+          { path: 'legal-mentions', component: Footer },
         ]),
       ],
-    });
+    }).compileComponents();
 
-    // Checks if the links exist
-    const contactLink = screen.getByText('Contact');
-    const legalLink = screen.getByText('Mentions légales');
-    expect(contactLink).toBeTruthy();
-    expect(legalLink).toBeTruthy();
+    fixture = TestBed.createComponent(Footer);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    // Checks if the copyright text exists
-    const copyright = screen.getByText(/EcoRide © 2025/);
-    expect(copyright).toBeTruthy();
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should render contact and legal links', () => {
+    const links = fixture.debugElement.queryAll(By.css('a'));
+    expect(links.length).toBe(2);
+    expect(links[0].nativeElement.getAttribute('href')).toBe('/contact');
+    expect(links[1].nativeElement.getAttribute('href')).toBe('/legal-mentions');
+  });
+
+  it('should render footer text', () => {
+    const p = fixture.debugElement.query(By.css('p')).nativeElement;
+    expect(p.textContent).toContain('EcoRide © 2025 - tous droits réservés.');
   });
 });
