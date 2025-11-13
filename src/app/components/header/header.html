@@ -7,7 +7,7 @@
   </div>
   <!--Menu Desktop-->
   <nav class="desktop-menu">
-    <a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+    <a [routerLink]="['']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
       >Accueil</a
     >
     @if(isLoggedIn()) {
@@ -25,7 +25,7 @@
       >Contact</a
     >
     @if(isLoggedIn()) {
-    <a [routerLink]="['/']">Déconnexion</a>
+    <a (click)="logout()">Déconnexion</a>
     }@else {
     <a
       [routerLink]="['/login']"
@@ -42,13 +42,13 @@
   </button>
   <!--Menu Mobile-->
   <nav class="mobile-menu" [class.open]="menuOpen()">
-    <a [routerLink]="['/']" (click)="closeMenu()">Accueil</a>
+    <a [routerLink]="['']" (click)="closeMenu()">Accueil</a>
     @if(isLoggedIn()) {
     <a [routerLink]="['/', userId, 'my-space']" (click)="closeMenu()">Mon espace</a>
     }
     <a [routerLink]="['/contact']" (click)="closeMenu()">Contact</a>
     @if(isLoggedIn()) {
-    <a [routerLink]="['/']" (click)="closeMenu()">Déconnexion</a>
+    <a (click)="logout()">Déconnexion</a>
     }@else {
     <a [routerLink]="['/login']" (click)="closeMenu()">Connexion</a>
     <button class="signup-btn" [routerLink]="['/signup']" (click)="closeMenu()">S'inscrire</button>

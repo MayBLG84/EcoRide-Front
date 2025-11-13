@@ -82,6 +82,7 @@
               "src/styles/styles.scss"
             ],
             "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"],
+            "browsers": false,
             "stylePreprocessorOptions": {
               "includePaths": ["src/styles"]
             }

@@ -41,17 +41,22 @@ describe('Header', () => {
     component.isLoggedIn.set(false);
     fixture.detectChanges();
 
-    const loginBtn = fixture.debugElement.query(By.css('a[routerLink="/login"]'));
+    const loginBtn = fixture.debugElement.query(By.css('a[ng-reflect-router-link="/login"]'));
     expect(loginBtn).toBeTruthy();
   });
 
   // Test 3: Checks if the logout link appears when the user is logged in
-  it('should display logout link when logged in', () => {
+  it('should call logout() when clicking logout link', () => {
     component.isLoggedIn.set(true);
     fixture.detectChanges();
 
-    const logoutLink = fixture.debugElement.query(By.css('a[routerLink="/"]')); // your logout link
-    expect(logoutLink).toBeTruthy();
+    const logoutLink = fixture.debugElement
+      .queryAll(By.css('a'))
+      .find((el) => !('ng-reflect-router-link' in el.attributes));
+
+    spyOn(component, 'logout');
+    logoutLink?.triggerEventHandler('click', null);
+    expect(component.logout).toHaveBeenCalled();
   });
 
   // Test 4: Checks if the mobile menu opens and closes when the burger button is clicked
@@ -74,7 +79,9 @@ describe('Header', () => {
     component.userId.set('123');
     fixture.detectChanges();
 
-    const mySpaceLink = fixture.debugElement.query(By.css('a[routerLink="/123/my-space"]'));
+    const mySpaceLink = fixture.debugElement.query(
+      By.css('a[ng-reflect-router-link="/123/my-space"]')
+    );
     expect(mySpaceLink).toBeTruthy();
   });
 
@@ -92,9 +99,10 @@ describe('Header', () => {
     component.isLoggedIn.set(false);
     fixture.detectChanges();
 
-    // Simulate being on the Home page
-    const homeLink = fixture.debugElement.query(By.css('a[routerLink="/"]'));
-    homeLink.nativeElement.classList.add('active'); // normally routerLinkActive does this
+    const homeLink = fixture.debugElement.query(By.css('a[ng-reflect-router-link=""]'));
+    expect(homeLink).toBeTruthy();
+
+    homeLink.nativeElement.classList.add('active');
     fixture.detectChanges();
 
     expect(homeLink.nativeElement.classList).toContain('active');
@@ -102,7 +110,8 @@ describe('Header', () => {
 
   // Test 8: Checks if the "Contact" link is present
   it('should have a contact link', () => {
-    const contactLink = fixture.debugElement.query(By.css('a[routerLink="/contact"]'));
+    fixture.detectChanges();
+    const contactLink = fixture.debugElement.query(By.css('a[ng-reflect-router-link="/contact"]'));
     expect(contactLink).toBeTruthy();
   });
 });

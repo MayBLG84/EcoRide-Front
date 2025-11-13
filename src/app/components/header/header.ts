@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 
 @Component({
@@ -15,7 +15,7 @@ export class Header {
   userId = signal<string | null>(null);
   menuOpen = signal(false);
 
-  constructor(private authService: Auth) {}
+  constructor(private authService: Auth, private router: Router) {}
 
   ngInit() {
     this.isLoggedIn.set(this.authService.isLoggedIn());
@@ -39,5 +39,6 @@ export class Header {
     this.isLoggedIn.set(false);
     this.userId.set(null);
     this.closeMenu();
+    this.router.navigate(['/']); // redirect to home
   }
 }
