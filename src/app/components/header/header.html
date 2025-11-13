@@ -7,15 +7,32 @@
   </div>
   <!--Menu Desktop-->
   <nav class="desktop-menu">
-    <a [routerLink]="['/']" routerLinkActive="active">Accueil</a>
+    <a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      >Accueil</a
+    >
     @if(isLoggedIn()) {
-    <a [routerLink]="['/', userId, 'my-space']" routerLinkActive="active">Mon espace</a>
+    <a
+      [routerLink]="['/', userId, 'my-space']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Mon espace</a
+    >
     }
-    <a [routerLink]="['/contact']" routerLinkActive="active">Contact</a>
+    <a
+      [routerLink]="['/contact']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Contact</a
+    >
     @if(isLoggedIn()) {
     <a [routerLink]="['/']">Déconnexion</a>
     }@else {
-    <a [routerLink]="['/']">Connexion</a>
+    <a
+      [routerLink]="['/login']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Connexion</a
+    >
     <button class="signup-btn" [routerLink]="['/signup']">S'inscrire</button>
     }
   </nav>
@@ -33,7 +50,7 @@
     @if(isLoggedIn()) {
     <a [routerLink]="['/']" (click)="closeMenu()">Déconnexion</a>
     }@else {
-    <a [routerLink]="['/']" (click)="closeMenu()">Connexion</a>
+    <a [routerLink]="['/login']" (click)="closeMenu()">Connexion</a>
     <button class="signup-btn" [routerLink]="['/signup']" (click)="closeMenu()">S'inscrire</button>
     }
   </nav>
