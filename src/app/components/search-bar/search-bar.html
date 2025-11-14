@@ -1,0 +1,63 @@
+<section class="search-bar-container">
+  <form #searchForm="ngForm" (ngSubmit)="onSearch()">
+    <div class="search-content">
+      <div class="field">
+        <div class="input-wrapper">
+          <i class="bi bi-geo-alt-fill"></i>
+          <input
+            type="text"
+            name="originCity"
+            [(ngModel)]="originCity"
+            placeholder="Ville de départ"
+            required
+          />
+        </div>
+        @if (errorOrigin) {
+        <small class="error">{{ errorOrigin }}</small>
+        }
+      </div>
+
+      <div class="field">
+        <div class="input-wrapper">
+          <i class="bi bi-flag-fill"></i>
+          <input
+            type="text"
+            name="destinyCity"
+            [(ngModel)]="destinyCity"
+            placeholder="Ville d'arrivée"
+            equired
+          />
+        </div>
+        @if (errorDestiny) {
+        <small class="error">{{ errorDestiny }}</small>
+        }
+      </div>
+
+      <div class="field">
+        <div class="input-wrapper">
+          <button class="date-btn" type="button" (click)="d.toggle()">
+            <i class="bi bi-calendar2-date-fill"></i>
+            <input
+              class="form-control"
+              placeholder="jj/mm/aaaa"
+              name="date"
+              [(ngModel)]="date"
+              ngbDatepicker
+              #d="ngbDatepicker"
+              [autoClose]="'outside'"
+              [container]="'body'"
+              required
+            />
+          </button>
+        </div>
+        @if (errorDate) {
+        <small class="error">{{ errorDate }}</small>
+        }
+      </div>
+
+      <div class="field">
+        <button class="btn search-btn" type="submit">Recherche</button>
+      </div>
+    </div>
+  </form>
+</section>
