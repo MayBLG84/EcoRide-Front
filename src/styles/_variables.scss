@@ -1,5 +1,5 @@
 // Color palette
-$primary: #5d796a;
+$primary: #244b36;
 $secondary: #9bb98d;
 $tertiary: #ffcc00;
 $light: #bde7e5;
@@ -11,5 +11,5 @@ $font-headline: 'Commissioner', sans-serif;
 $font-content: 'Source Sans 3', sans-serif;
 
 //Breakpoints
-$breakpoint-md: 768px;
-$breakpoint-lg: 1024px;
+$breakpointMaxWidth: 991px;
+$breakpointMinWidth: 992px;

@@ -130,7 +130,7 @@
 }
 
 /* Responsiveness */
-@media (max-width: 1000px) {
+@media (max-width: $breakpointMaxWidth) {
   .desktop-menu {
     display: none;
   }
