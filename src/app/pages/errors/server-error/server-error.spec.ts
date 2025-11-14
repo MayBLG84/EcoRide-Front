@@ -8,9 +8,8 @@ describe('ServerError', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ServerError]
-    })
-    .compileComponents();
+      imports: [ServerError],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ServerError);
     component = fixture.componentInstance;
