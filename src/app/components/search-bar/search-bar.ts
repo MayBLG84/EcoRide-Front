@@ -25,33 +25,19 @@ export class SearchBar {
 
   constructor(private router: Router, private validation: ValidationService) {}
 
-  onSearch() {
-    // Reset error messages
-    this.errorOrigin = '';
-    this.errorDestiny = '';
-    this.errorDate = '';
-    this.errorGeneral = '';
+  onSearch(): void {
+    this.clearErrors();
 
-    let valid = true;
+    const originValid = this.validation.isValidCity(this.originCity);
+    const destinyValid = this.validation.isValidCity(this.destinyCity);
+    const dateValid = this.validation.isValidDate(this.date);
 
-    if (!this.validation.isValidCity(this.originCity)) {
-      this.errorOrigin = 'Ville invalide.';
-      valid = false;
-    }
+    if (!originValid) this.errorOrigin = 'Ville invalide.';
+    if (!destinyValid) this.errorDestiny = 'Ville invalide.';
+    if (!dateValid) this.errorDate = 'Veuillez sélectionner une date valide.';
 
-    if (!this.validation.isValidCity(this.destinyCity)) {
-      this.errorDestiny = 'Ville invalide.';
-      valid = false;
-    }
-
-    if (!this.validation.isValidDate(this.date)) {
-      this.errorDate = 'Veuillez sélectionner une date valide.';
-      valid = false;
-    }
-
-    if (!valid) {
-      this.errorGeneral = 'Tous les champs doivent être remplis.';
-      return;
+    if (!originValid || !destinyValid || !dateValid) {
+      return; // já mostra erros, não precisa errorGeneral
     }
 
     const jsDate = this.validation.toJsDate(this.date!);
@@ -63,5 +49,12 @@ export class SearchBar {
         date: jsDate.toISOString(),
       },
     });
+  }
+
+  private clearErrors() {
+    this.errorOrigin = '';
+    this.errorDestiny = '';
+    this.errorDate = '';
+    this.errorGeneral = '';
   }
 }

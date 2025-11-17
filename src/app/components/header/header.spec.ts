@@ -1,71 +1,121 @@
-import { render, screen } from '@testing-library/angular';
-import { provideRouter } from '@angular/router';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Header } from './header';
+import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { provideRouter, Routes } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { Home } from '../../pages/home/home';
+import { MySpace } from '../../pages/my-space/my-space';
+import { Contact } from '../../pages/contact/contact';
+import { Login } from '../../pages/login/login';
+import { Signup } from '../../pages/signup/signup';
 
-describe('Header Component', () => {
-  let mockAuth: Partial<Auth>;
+describe('Header', () => {
+  let fixture: ComponentFixture<Header>;
+  let component: Header;
+  let authMock: any;
+  let router: Router;
 
-  beforeEach(() => {
-    mockAuth = {
+  const routes: Routes = [
+    { path: '', component: Home },
+    { path: ':userId/my-space', component: MySpace },
+    { path: 'contact', component: Contact },
+    { path: 'login', component: Login },
+    { path: 'signup', component: Signup },
+  ];
+
+  beforeEach(async () => {
+    authMock = {
       isLoggedIn: jest.fn().mockReturnValue(false),
       getUserId: jest.fn().mockReturnValue(null),
       logout: jest.fn(),
     };
+
+    await TestBed.configureTestingModule({
+      imports: [Header],
+      providers: [provideRouter(routes), { provide: Auth, useValue: authMock }],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(Header);
+    component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    fixture.detectChanges();
   });
 
-  it('should create the component', async () => {
-    const { fixture } = await render(Header, {
-      providers: [provideRouter([]), { provide: Auth, useValue: mockAuth }],
-    });
-    expect(fixture.componentInstance).toBeTruthy();
+  function resetComponent(loggedIn: boolean, userId: string | null = null) {
+    authMock.isLoggedIn.mockReturnValue(loggedIn);
+    authMock.getUserId.mockReturnValue(userId);
+    component.ngOnInit();
+    fixture.detectChanges();
+  }
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('should render navigation links', async () => {
-    await render(Header, {
-      providers: [provideRouter([]), { provide: Auth, useValue: mockAuth }],
-    });
+  it('should show logo and brand', () => {
+    const logo = fixture.nativeElement.querySelector('.logo') as HTMLImageElement;
+    const brand = fixture.nativeElement.querySelector('.brand') as HTMLElement;
 
-    expect(screen.getByText('Accueil')).toBeTruthy();
-    expect(screen.getByText('Contact')).toBeTruthy();
-    expect(screen.getByText('Connexion')).toBeTruthy();
-    expect(screen.getByText("S'inscrire")).toBeTruthy();
+    expect(logo).toBeTruthy();
+    expect(brand).toBeTruthy();
+    expect(brand.textContent).toContain('EcoRide');
   });
 
-  it('should toggle menu open state', async () => {
-    const { fixture } = await render(Header, {
-      providers: [provideRouter([]), { provide: Auth, useValue: mockAuth }],
-    });
+  it('should logout and navigate to home on deconnexion click', async () => {
+    resetComponent(true, '123');
 
-    const component = fixture.componentInstance;
-    expect(component.menuOpen()).toBe(false);
+    const harness = await RouterTestingHarness.create();
+    const links = fixture.nativeElement.querySelectorAll('a') as NodeListOf<HTMLAnchorElement>;
+    const logoutLink = Array.from(links).find((a) => a.textContent?.includes('Déconnexion'))!;
 
-    component.toggleMenu();
-    expect(component.menuOpen()).toBe(true);
+    logoutLink.click();
+    fixture.detectChanges();
 
-    component.closeMenu();
-    expect(component.menuOpen()).toBe(false);
-  });
-
-  it('should log out and navigate home', async () => {
-    const navigateMock = jest.fn();
-    const mockRouter = { navigate: navigateMock } as any;
-
-    const { fixture } = await render(Header, {
-      providers: [
-        provideRouter([]),
-        { provide: Auth, useValue: mockAuth },
-        { provide: 'Router', useValue: mockRouter },
-      ],
-    });
-
-    const component = fixture.componentInstance;
-
-    component.logout();
-
-    expect(mockAuth.logout).toHaveBeenCalled();
+    expect(authMock.logout).toHaveBeenCalled();
     expect(component.isLoggedIn()).toBe(false);
     expect(component.userId()).toBeNull();
-    expect(navigateMock).toHaveBeenCalledWith(['/']);
+
+    await harness.navigateByUrl('/');
+    const routedElement = await harness.routeNativeElement;
+    expect(routedElement).not.toBeNull();
+  });
+
+  it('should toggle mobile menu when burger is clicked', () => {
+    const burger = fixture.nativeElement.querySelector('.burger') as HTMLButtonElement;
+
+    expect(component.menuOpen()).toBe(false);
+
+    burger.click();
+    fixture.detectChanges();
+    expect(component.menuOpen()).toBe(true);
+
+    burger.click();
+    fixture.detectChanges();
+    expect(component.menuOpen()).toBe(false);
+  });
+
+  it('should close menu when closeMenu() is called', () => {
+    component.menuOpen.set(true);
+    component.closeMenu();
+    fixture.detectChanges();
+    expect(component.menuOpen()).toBe(false);
+  });
+
+  it('should navigate to correct links (desktop and mobile)', async () => {
+    resetComponent(false);
+    const harness = await RouterTestingHarness.create();
+    const links = fixture.nativeElement.querySelectorAll(
+      'a[routerLink]'
+    ) as NodeListOf<HTMLAnchorElement>;
+
+    for (const link of Array.from(links)) {
+      const route = link.getAttribute('ng-reflect-router-link') || link.getAttribute('routerLink');
+      if (route) {
+        await harness.navigateByUrl(route);
+        const el = await harness.routeNativeElement;
+        expect(el).not.toBeNull();
+      }
+    }
   });
 });

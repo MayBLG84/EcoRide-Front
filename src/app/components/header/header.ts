@@ -17,7 +17,7 @@ export class Header {
 
   constructor(private authService: Auth, private router: Router) {}
 
-  ngInit() {
+  ngOnInit() {
     this.isLoggedIn.set(this.authService.isLoggedIn());
     this.userId.set(this.authService.getUserId());
   }
