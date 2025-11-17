@@ -2,14 +2,17 @@
 
 .header {
   background-color: $bg-dark;
-  height: 55px;
+  height: $header-height;
   width: 100%;
   padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .logo-container {

@@ -80,9 +80,10 @@
         font-weight: 500;
         width: 100px;
         cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
         &:hover {
-          opacity: 0.9;
+          transform: scale(1.05);
         }
       }
 
