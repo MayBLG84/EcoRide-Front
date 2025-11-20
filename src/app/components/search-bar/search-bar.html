@@ -1,18 +1,13 @@
 <section class="search-bar-container">
-  <form #searchForm="ngForm" (ngSubmit)="onSearch()">
+  <form [formGroup]="form" (ngSubmit)="onSearch()">
     <div class="search-content">
       <div class="field">
         <div class="input-wrapper">
           <i class="bi bi-geo-alt-fill"></i>
-          <input
-            type="text"
-            name="originCity"
-            [(ngModel)]="originCity"
-            placeholder="Ville de départ"
-            required
-          />
+          <input type="text" formControlName="originCity" placeholder="Ville de départ" required />
         </div>
-        @if (errorOrigin) {
+        @if ((!validation.isNonEmpty(form.value.originCity) ||
+        !validation.isValidCity(form.value.originCity)) && form.get('originCity')?.touched) {
         <small class="error">{{ errorOrigin }}</small>
         }
       </div>
@@ -20,15 +15,10 @@
       <div class="field">
         <div class="input-wrapper">
           <i class="bi bi-flag-fill"></i>
-          <input
-            type="text"
-            name="destinyCity"
-            [(ngModel)]="destinyCity"
-            placeholder="Ville d'arrivée"
-            required
-          />
+          <input type="text" formControlName="destinyCity" placeholder="Ville d'arrivée" required />
         </div>
-        @if (errorDestiny) {
+        @if ((!validation.isNonEmpty(form.value.destinyCity) ||
+        !validation.isValidCity(form.value.destinyCity)) && form.get('destinyCity')?.touched) {
         <small class="error">{{ errorDestiny }}</small>
         }
       </div>
@@ -40,8 +30,7 @@
             <input
               class="form-control"
               placeholder="jj/mm/aaaa"
-              name="date"
-              [(ngModel)]="date"
+              formControlName="date"
               ngbDatepicker
               #d="ngbDatepicker"
               [autoClose]="'outside'"
@@ -50,7 +39,8 @@
             />
           </button>
         </div>
-        @if (errorDate) {
+        @if ((!validation.isNonEmpty(form.value.date) || !validation.isValidDate(form.value.date))
+        && form.get('date')?.touched) {
         <small class="error">{{ errorDate }}</small>
         }
       </div>
