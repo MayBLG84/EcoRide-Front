@@ -1,14 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Ride, RideSearchResponse } from '../models/ride-search-response.model';
+import { RideSearchRequest } from '../models/ride-search-request.model';
 
-@Injectable({ providedIn: 'root' })
-export class SearchService {
-  private apiUrl = 'http://localhost:8000/api/search';
+@Injectable({
+  providedIn: 'root',
+})
+export class SearchRideService {
+  private apiUrl = 'http://localhost:8000/api/rides/search';
 
   constructor(private http: HttpClient) {}
 
-  search(payload: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, payload);
+  searchRides(request: RideSearchRequest): Observable<RideSearchResponse> {
+    let params = new HttpParams();
+
+    if (request.originCity) params = params.set('originCity', request.originCity);
+    if (request.destinyCity) params = params.set('destinyCity', request.destinyCity);
+    if (request.date) {
+      params = params
+        .set('date[year]', request.date.year.toString())
+        .set('date[month]', request.date.month.toString())
+        .set('date[day]', request.date.day.toString());
+    }
+    if (request.page) params = params.set('page', request.page.toString());
+
+    return this.http.get<RideSearchResponse>(this.apiUrl, { params });
   }
 }

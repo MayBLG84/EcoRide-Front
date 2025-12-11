@@ -1,0 +1,58 @@
+@use 'variables' as *;
+
+/* Headline section */
+.headline-container {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  padding: 20px 0px;
+}
+
+h2 {
+  width: 100%;
+  text-align: center;
+  font-family: $font-headline;
+  color: $primary;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+h5 {
+  width: 100%;
+  text-align: center;
+  font-family: $font-content;
+  color: $secondary;
+}
+
+.results-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .no-results {
+  }
+
+  .rides-field {
+    width: 880px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    @media (min-width: $breakpointMinWidth) {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  .card-wrapper {
+    background-color: $primary;
+    width: 280px;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+  }
+}

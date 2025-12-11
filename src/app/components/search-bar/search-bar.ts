@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ValidationService } from '../../services/validation';
-import { SearchService } from '../../services/search-ride';
+import { SearchRideService } from '../../services/search-ride';
+import { RideSearchRequest } from '../../models/ride-search-request.model';
 
 @Component({
   selector: 'app-search-bar',
@@ -24,7 +25,7 @@ export class SearchBar {
     private fb: FormBuilder,
     private router: Router,
     public validation: ValidationService,
-    private searchService: SearchService
+    private searchRideService: SearchRideService
   ) {
     // Reactive form without built-in Angular validators
     // because validation is handled by ValidationService
@@ -56,25 +57,30 @@ export class SearchBar {
       return;
     }
 
-    // Convert NgbDateStruct → ISO string using your validation helper
-    const isoDate = this.validation.toJsDate(date).toISOString();
-
     // JSON payload sent to backend
-    const payload = {
+    const payload: RideSearchRequest = {
       originCity,
       destinyCity,
-      date: isoDate,
+      date,
+      page: 1,
     };
 
     // Send search request to backend API
-    this.searchService.search(payload).subscribe({
-      next: (results) => {
+    this.searchRideService.searchRides(payload).subscribe({
+      next: (response) => {
         // Navigate to /results and pass data through navigation state
-        this.router.navigate(['/results'], { state: { results } });
+        this.router.navigate(['/results'], {
+          state: { results: response },
+          queryParams: {
+            originCity,
+            destinyCity,
+            year: date.year,
+            month: date.month,
+            day: date.day,
+          },
+        });
       },
-      error: (err) => {
-        console.error('API Error: ', err);
-      },
+      error: (err) => console.error(err),
     });
   }
 

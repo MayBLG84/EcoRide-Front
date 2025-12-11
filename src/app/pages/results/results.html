@@ -1,1 +1,128 @@
-<p>results works!</p>
+<app-search-bar></app-search-bar>
+<section class="headline-container">
+  <h2>Les résultats de votre recherche</h2>
+  <h5><em>Ensemble sur la voie verte</em></h5>
+</section>
+
+<section class="results-container">
+  <!-- NO RESULTS -->
+  @if (rides.length === 0 && !isLoading) {
+  <div class="no-results">
+    Malheureusement, aucun résultat ne correspond à votre recherche, ni à la date choisie, ni aux
+    dates à venir.
+  </div>
+  }
+
+  <section class="rides-field">
+    <!-- RIDE CARD -->
+    @for (ride of rides; track ride.id) {
+
+    <div class="card-wrapper">
+      <!-- Header -->
+      <div class="card-header">
+        <div class="driver-info">
+          <img [src]="ride.driver.photoThumbnail" alt="Image du chauffeur/ de la chauffeuse" />
+
+          <div class="content">
+            <h6>Chauffeur.euse :</h6>
+            <p>{{ ride.driver.nickname }}</p>
+
+            <div class="driver-rating">
+              @for (s of [1, 2, 3, 4, 5]; track s) {
+              <i
+                [class.bi-star-fill]="getStarType(s, ride.driver.avgRating) === 'full'"
+                [class.bi-star-half]="getStarType(s, ride.driver.avgRating) === 'half'"
+                [class.bi-star]="getStarType(s, ride.driver.avgRating) === 'empty'"
+              ></i>
+              }
+            </div>
+          </div>
+        </div>
+
+        @if (ride.vehicle.isElectric) {
+        <div class="icon-vehicle-electric">
+          <img src="assets/ev-charger-station.png" alt="Icône d'une voiture electrique" />
+        </div>
+        }
+      </div>
+
+      <!-- Date & Seats -->
+      <div class="ride-date">
+        <h3>{{ ride.date }}</h3>
+      </div>
+      <div class="ride-seats">
+        <p>Il y a {{ ride.availableSeats }} places disponibles !</p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="ride-content">
+        <h6>Ville de départ :</h6>
+        <p>{{ ride.origin.city }}</p>
+
+        <h6>Ville d'arrivée :</h6>
+        <p>{{ ride.destiny.city }}</p>
+
+        <h6>Heure de départ :</h6>
+        <p>{{ ride.departureTime }}</p>
+
+        <h6>Durée estimée :</h6>
+        <p>{{ ride.estimatedDuration }}</p>
+      </div>
+
+      <!-- Details -->
+      @if (ride.showDetails) {
+      <div class="ride-details">
+        <h6>Point de rencontre :</h6>
+        <p>{{ ride.origin.pickPoint }}</p>
+
+        <h6>Point de dépôt :</h6>
+        <p>{{ ride.destiny.dropPoint }}</p>
+
+        <h6>Modèle du véhicule :</h6>
+        <p>{{ ride.vehicle.model }}</p>
+
+        <h6>Marque du véhicule :</h6>
+        <p>{{ ride.vehicle.brand }}</p>
+
+        <h6>Préférences du/de la Chauffeur.euse :</h6>
+        <p>Fumeur : {{ ride.preferences.smoker ? 'oui' : 'non' }}</p>
+        <p>Animaux permis : {{ ride.preferences.animals ? 'oui' : 'non' }}</p>
+
+        @if (ride.preferences.other) {
+        <p>{{ ride.preferences.other }}</p>
+        }
+      </div>
+      }
+
+      <!-- Toggle Details -->
+      <button class="btn btn-details" (click)="toggleDetails(ride)">
+        {{ ride.showDetails ? 'Cacher les détails' : 'Voir les détails' }}
+      </button>
+
+      <!-- Price & Participate -->
+      <div class="bottom-row">
+        <div class="ride-price">{{ ride.pricePerPerson }} €</div>
+
+        <button class="btn btn-participate" (click)="participate(ride)">
+          {{ ride.participating ? 'Annuler ma participation' : 'Participer' }}
+        </button>
+      </div>
+    </div>
+
+    }
+
+    <!-- Show More Button -->
+    @if (rides.length < totalResults) {
+    <div class="show-more-container">
+      <button class="btn btn-show-more" (click)="loadRides()" [disabled]="isLoading">
+        {{ isLoading ? 'Chargement...' : 'Voir plus de résultats' }}
+      </button>
+    </div>
+    }
+  </section>
+
+  <!-- LOADING -->
+  @if (isLoading) {
+  <div class="loading">Chargement...</div>
+  }
+</section>
