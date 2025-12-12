@@ -1,6 +1,6 @@
 <app-search-bar></app-search-bar>
 <section class="headline-container">
-  <h2>Les résultats de votre recherche</h2>
+  <h2>Le résultat de votre recherche</h2>
   <h5><em>Ensemble sur la voie verte</em></h5>
 </section>
 
@@ -8,12 +8,12 @@
   <!-- NO RESULTS -->
   @if (rides.length === 0 && !isLoading) {
   <div class="no-results">
-    Malheureusement, aucun résultat ne correspond à votre recherche, ni à la date choisie, ni aux
-    dates à venir.
+    Malheureusement, aucun résultat ne correspond pas à votre recherche, ni à la date choisie, ni
+    aux dates à venir.
   </div>
   }
 
-  <section class="rides-field">
+  <div class="rides-field">
     <!-- RIDE CARD -->
     @for (ride of rides; track ride.id) {
 
@@ -119,7 +119,7 @@
       </button>
     </div>
     }
-  </section>
+  </div>
 
   <!-- LOADING -->
   @if (isLoading) {

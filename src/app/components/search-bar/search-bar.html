@@ -25,19 +25,19 @@
 
       <div class="field">
         <div class="input-wrapper">
-          <button class="date-btn" type="button" (click)="d.toggle()">
-            <i class="bi bi-calendar2-date-fill"></i>
-            <input
-              class="form-control"
-              placeholder="jj/mm/aaaa"
-              formControlName="date"
-              ngbDatepicker
-              #d="ngbDatepicker"
-              [autoClose]="'outside'"
-              [container]="'body'"
-              required
-            />
-          </button>
+          <i class="bi bi-calendar2-date-fill"></i>
+          <input
+            class="form-control"
+            placeholder="aaaa-mm-jj"
+            formControlName="date"
+            ngbDatepicker
+            #d="ngbDatepicker"
+            [readonly]="true"
+            (click)="d.toggle()"
+            [autoClose]="'outside'"
+            [container]="'body'"
+            required
+          />
         </div>
         @if ((!validation.isNonEmpty(form.value.date) || !validation.isValidDate(form.value.date))
         && form.get('date')?.touched) {

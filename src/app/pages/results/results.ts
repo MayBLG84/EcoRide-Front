@@ -9,7 +9,7 @@ import { SearchBar } from '../../components/search-bar/search-bar';
   templateUrl: './results.html',
   styleUrls: ['./results.scss'],
 })
-export class ResultsComponent implements OnInit {
+export class Results implements OnInit {
   rides: Ride[] = [];
   page: number = 1;
   pageSize: number = 18;
@@ -21,14 +21,10 @@ export class ResultsComponent implements OnInit {
 
   ngOnInit(): void {
     const navigation = history.state;
-
     if (navigation.results) {
       this.initializeFromState(navigation.results as RideSearchResponse);
     } else {
-      // Para testar layout, criar 6 cards falsos
-      this.createFakeRides();
-      // Se quiser usar o backend, descomente a linha abaixo
-      // this.loadRides();
+      this.loadRides();
     }
   }
 
@@ -50,7 +46,7 @@ export class ResultsComponent implements OnInit {
         destinyCity: '',
         date: { year: 0, month: 0, day: 0 },
         page: this.page,
-      })
+      }) // ajuste necessário
       .subscribe({
         next: (res: RideSearchResponse) => {
           const ridesWithFlags = res.rides.map((r) => ({
@@ -85,30 +81,5 @@ export class ResultsComponent implements OnInit {
 
   participate(ride: Ride): void {
     ride.participating = !ride.participating;
-  }
-
-  // Função para criar rides falsas temporárias
-  private createFakeRides(): void {
-    this.rides = Array.from({ length: 6 }).map((_, i) => ({
-      id: i + 1,
-      driver: {
-        id: i + 1,
-        nickname: `Chauffeur ${i + 1}`,
-        photoThumbnail: null, // ou link de placeholder
-        avgRating: Math.random() * 5,
-      },
-      date: '2025-12-12',
-      departureTime: '14:30',
-      availableSeats: 3,
-      origin: { city: 'Paris' },
-      destiny: { city: 'Lyon' },
-      estimatedDuration: '2h 45min',
-      vehicle: { brand: 'Tesla', model: 'Model 3', isElectric: true },
-      preferences: { smoker: false, animals: true, other: 'Musique forte' },
-      pricePerPerson: 25,
-      showDetails: false,
-      participating: false,
-    }));
-    this.totalResults = this.rides.length;
   }
 }
