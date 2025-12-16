@@ -48,11 +48,16 @@ h5 {
     }
   }
 
+  .future-results-message {
+    @extend .no-results;
+    margin-bottom: 20px;
+  }
+
   .rides-field {
     width: 880px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
     gap: 20px;
 
     @media (min-width: $breakpointMinWidth) {
@@ -70,5 +75,231 @@ h5 {
     justify-content: space-between;
     align-items: center;
     border-radius: 10px;
+  }
+
+  .driver-grid {
+    display: grid;
+    grid-template-columns: 84px 1fr auto;
+    grid-template-rows: repeat(7, 1fr);
+    height: 84px;
+    max-height: 84px;
+    width: 90%;
+    column-gap: 4px;
+    align-items: start;
+  }
+
+  .driver-photo {
+    grid-column: 1;
+    grid-row: 2 / 8;
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    align-self: start;
+    justify-self: start;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .driver-label {
+    grid-column: 2;
+    grid-row: 2;
+    margin: 0;
+    align-self: start;
+    justify-self: start;
+    color: $light;
+    font-family: $font-content;
+    font-size: 10px;
+  }
+
+  .driver-nickname {
+    grid-column: 2;
+    grid-row: 4;
+    margin: 0;
+    align-self: end;
+    justify-self: start;
+    color: white;
+    font-family: $font-headline;
+    font-size: 16px;
+  }
+
+  .driver-rating {
+    grid-column: 2;
+    grid-row: 5;
+    align-self: start;
+    justify-self: start;
+
+    i {
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .bi-star-fill,
+    .bi-star-half,
+    .bi-star {
+      color: $tertiary;
+    }
+  }
+
+  .icon-vehicle-electric {
+    grid-column: 3;
+    grid-row: 1 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: start;
+    justify-self: end;
+    background-color: $secondary;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .icon-vehicle-electric img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .ride-date {
+    background-color: $tertiary;
+    color: $bg-dark;
+    border: none;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    width: 240px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+
+    h3 {
+      font-family: $font-headline;
+      font-weight: 600;
+      font-size: 1.25rem;
+      padding: 0px;
+      margin: 0px;
+    }
+  }
+  .ride-seats {
+    p {
+      font-family: $font-headline;
+      font-weight: 400;
+      font-size: 1rem;
+      padding: 0px;
+      margin: 1px;
+      color: $tertiary;
+      margin-top: 6px;
+      margin-bottom: 12px;
+    }
+  }
+  .ride-content,
+  .ride-details {
+    text-align: left;
+    width: 100%;
+
+    .item-ride {
+      display: flex;
+      flex-direction: column;
+      padding-left: 10px;
+      padding-right: 10px;
+      margin-top: -5px;
+
+      h6 {
+        color: $light;
+        font-family: $font-content;
+        font-size: 10px;
+        margin-bottom: -2px;
+      }
+
+      p {
+        color: white;
+        font-family: $font-content;
+        font-size: 12px;
+      }
+
+      .p-preferences {
+        color: white;
+        font-family: $font-content;
+        font-size: 12px;
+        margin-bottom: -2px;
+      }
+    }
+  }
+
+  .btn-details,
+  .btn-show-more {
+    background-color: $bg-dark;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: $font-content;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .btn-details--active {
+    background-color: $secondary;
+    color: $bg-dark;
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .bottom-row {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .ride-price {
+      padding-left: 10px;
+      padding-right: 10px;
+      margin-top: 12px;
+      color: $tertiary;
+      font-family: $font-headline;
+      font-size: 16px;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      font-size: 1.25rem;
+      text-align: right;
+    }
+
+    .btn-participate {
+      background-color: $tertiary;
+      color: $bg-dark;
+      width: 120px;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: $font-content;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+      margin-top: 12px;
+      align-self: center;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    .btn-participate--active {
+      background-color: $attention;
+      color: white;
+      width: 200px;
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    .btn-participate--login {
+      @extend .btn-participate;
+      width: 240px;
+    }
   }
 }

@@ -96,6 +96,17 @@
       }
     }
 
+    .ngb-dp-weekday {
+      color: $secondary;
+      font-weight: 600;
+    }
+
+    .btn-link {
+      color: $primary;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
     @media (max-width: $breakpointMaxWidth) {
       .search-content {
         flex-direction: column;

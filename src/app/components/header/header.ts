@@ -39,6 +39,6 @@ export class Header {
     this.isLoggedIn.set(false);
     this.userId.set(null);
     this.closeMenu();
-    this.router.navigate(['/']); // redirect to home
+    this.router.navigate(['/']);
   }
 }

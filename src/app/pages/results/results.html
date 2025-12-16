@@ -6,10 +6,18 @@
 
 <section class="results-container">
   <!-- NO RESULTS -->
-  @if (rides.length === 0 && !isLoading) {
+  @if (status === 'NO_MATCH' && !isLoading) {
   <div class="no-results">
     Malheureusement, aucun résultat ne correspond pas à votre recherche, ni à la date choisie, ni
     aux dates à venir.
+  </div>
+  }
+
+  <!-- FUTURE MATCHS -->
+  @if (status === 'FUTURE_MATCH' && !isLoading) {
+  <div class="future-results-message">
+    Aucune course n'a été trouvée pour la date choisie, mais voici quelques suggestions pour des
+    dates futures :
   </div>
   }
 
@@ -19,24 +27,25 @@
 
     <div class="card-wrapper">
       <!-- Header -->
-      <div class="card-header">
-        <div class="driver-info">
-          <img [src]="ride.driver.photoThumbnail" alt="Image du chauffeur/ de la chauffeuse" />
+      <div class="card-header driver-grid">
+        <img
+          class="driver-photo"
+          [src]="getDriverImage(ride)"
+          (error)="onImageError($event)"
+          alt="Image du chauffeur/ de la chauffeuse"
+        />
 
-          <div class="content">
-            <h6>Chauffeur.euse :</h6>
-            <p>{{ ride.driver.nickname }}</p>
+        <h6 class="driver-label">Chauffeur.euse :</h6>
+        <p class="driver-nickname">{{ ride.driver.nickname }}</p>
 
-            <div class="driver-rating">
-              @for (s of [1, 2, 3, 4, 5]; track s) {
-              <i
-                [class.bi-star-fill]="getStarType(s, ride.driver.avgRating) === 'full'"
-                [class.bi-star-half]="getStarType(s, ride.driver.avgRating) === 'half'"
-                [class.bi-star]="getStarType(s, ride.driver.avgRating) === 'empty'"
-              ></i>
-              }
-            </div>
-          </div>
+        <div class="driver-rating">
+          @for (s of [1, 2, 3, 4, 5]; track s) {
+          <i
+            [class.bi-star-fill]="getStarType(s, ride.driver.avgRating) === 'full'"
+            [class.bi-star-half]="getStarType(s, ride.driver.avgRating) === 'half'"
+            [class.bi-star]="getStarType(s, ride.driver.avgRating) === 'empty'"
+          ></i>
+          }
         </div>
 
         @if (ride.vehicle.isElectric) {
@@ -51,51 +60,73 @@
         <h3>{{ ride.date }}</h3>
       </div>
       <div class="ride-seats">
+        @if (ride.availableSeats === 1){
+        <p>Il y a {{ ride.availableSeats }} place disponible !</p>
+        } @else {
         <p>Il y a {{ ride.availableSeats }} places disponibles !</p>
+        }
       </div>
 
       <!-- Main Content -->
       <div class="ride-content">
-        <h6>Ville de départ :</h6>
-        <p>{{ ride.origin.city }}</p>
-
-        <h6>Ville d'arrivée :</h6>
-        <p>{{ ride.destiny.city }}</p>
-
-        <h6>Heure de départ :</h6>
-        <p>{{ ride.departureTime }}</p>
-
-        <h6>Durée estimée :</h6>
-        <p>{{ ride.estimatedDuration }}</p>
+        <div class="item-ride">
+          <h6>Ville de départ :</h6>
+          <p>{{ ride.origin.city }}</p>
+        </div>
+        <div class="item-ride">
+          <h6>Ville d'arrivée :</h6>
+          <p>{{ ride.destiny.city }}</p>
+        </div>
+        <div class="item-ride">
+          <h6>Heure de départ :</h6>
+          <p>{{ ride.departureTime }}</p>
+        </div>
+        <div class="item-ride">
+          <h6>Durée estimée :</h6>
+          <p>{{ ride.estimatedDuration }}</p>
+        </div>
       </div>
 
       <!-- Details -->
       @if (ride.showDetails) {
       <div class="ride-details">
-        <h6>Point de rencontre :</h6>
-        <p>{{ ride.origin.pickPoint }}</p>
+        <div class="item-ride">
+          <h6>Point de rencontre :</h6>
+          <p>{{ ride.origin.pickPoint }}</p>
+        </div>
 
-        <h6>Point de dépôt :</h6>
-        <p>{{ ride.destiny.dropPoint }}</p>
+        <div class="item-ride">
+          <h6>Point de dépôt :</h6>
+          <p>{{ ride.destiny.dropPoint }}</p>
+        </div>
 
-        <h6>Modèle du véhicule :</h6>
-        <p>{{ ride.vehicle.model }}</p>
+        <div class="item-ride">
+          <h6>Modèle du véhicule :</h6>
+          <p>{{ ride.vehicle.model }}</p>
+        </div>
 
-        <h6>Marque du véhicule :</h6>
-        <p>{{ ride.vehicle.brand }}</p>
+        <div class="item-ride">
+          <h6>Marque du véhicule :</h6>
+          <p>{{ ride.vehicle.brand }}</p>
+        </div>
 
-        <h6>Préférences du/de la Chauffeur.euse :</h6>
-        <p>Fumeur : {{ ride.preferences.smoker ? 'oui' : 'non' }}</p>
-        <p>Animaux permis : {{ ride.preferences.animals ? 'oui' : 'non' }}</p>
-
-        @if (ride.preferences.other) {
-        <p>{{ ride.preferences.other }}</p>
-        }
+        <div class="item-ride">
+          <h6>Préférences du/de la Chauffeur.euse :</h6>
+          <p class="p-preferences">Fumeur : {{ ride.preferences.smoker ? 'oui' : 'non' }}</p>
+          <p>Animaux permis : {{ ride.preferences.animals ? 'oui' : 'non' }}</p>
+          @if (ride.preferences.other) {
+          <p>{{ ride.preferences.other }}</p>
+          }
+        </div>
       </div>
       }
 
       <!-- Toggle Details -->
-      <button class="btn btn-details" (click)="toggleDetails(ride)">
+      <button
+        class="btn btn-details"
+        [class.btn-details--active]="ride.showDetails"
+        (click)="toggleDetails(ride)"
+      >
         {{ ride.showDetails ? 'Cacher les détails' : 'Voir les détails' }}
       </button>
 
@@ -103,8 +134,19 @@
       <div class="bottom-row">
         <div class="ride-price">{{ ride.pricePerPerson }} €</div>
 
-        <button class="btn btn-participate" (click)="participate(ride)">
-          {{ ride.participating ? 'Annuler ma participation' : 'Participer' }}
+        <button
+          class="btn btn-participate"
+          [class.btn-participate--active]="ride.participating && auth.isLoggedIn()"
+          [class.btn-participate--login]="!auth.isLoggedIn()"
+          (click)="participate(ride)"
+        >
+          {{
+            !auth.isLoggedIn()
+              ? 'Se connecter pour participer'
+              : ride.participating
+              ? 'Annuler ma participation'
+              : 'Participer'
+          }}
         </button>
       </div>
     </div>
