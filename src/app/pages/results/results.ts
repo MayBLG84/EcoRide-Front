@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { switchMap, filter, takeUntil } from 'rxjs/operators';
 import { SearchRideService } from '../../services/search-ride';
 import { RideParticipation } from '../../services/ride-participation';
 import { Auth } from '../../services/auth';
 import { Ride, RideSearchResponse } from '../../models/ride-search-response.model';
 import { RideParticipationRequest } from '../../models/ride-participation-request.model';
 import { SearchBar } from '../../components/search-bar/search-bar';
+import { RideSearchRequest } from '../../models/ride-search-request.model';
 
 @Component({
   selector: 'app-results',
@@ -13,7 +16,7 @@ import { SearchBar } from '../../components/search-bar/search-bar';
   templateUrl: './results.html',
   styleUrls: ['./results.scss'],
 })
-export class Results implements OnInit {
+export class Results implements OnInit, OnDestroy {
   rides: Ride[] = [];
   page: number = 1;
   pageSize: number = 18;
@@ -22,28 +25,57 @@ export class Results implements OnInit {
   noMoreResults: boolean = false;
   status: 'EXACT_MATCH' | 'FUTURE_MATCH' | 'NO_MATCH' | 'INVALID_REQUEST' = 'NO_MATCH';
 
+  private destroy$ = new Subject<void>();
+  private lastPayload!: RideSearchRequest;
+
   constructor(
     private searchRideService: SearchRideService,
+    private route: ActivatedRoute,
     private rideParticipation: RideParticipation,
     public auth: Auth,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    const navigation = history.state;
-    if (navigation.results) {
-      this.initializeFromState(navigation.results as RideSearchResponse);
-    } else {
-      this.loadRides();
-    }
+    this.route.queryParams
+      .pipe(
+        filter((params) => !!params['originCity']),
+        switchMap((params) => {
+          this.lastPayload = {
+            originCity: params['originCity'],
+            destinyCity: params['destinyCity'],
+            date: {
+              year: +params['year'],
+              month: +params['month'],
+              day: +params['day'],
+            },
+            page: 1,
+          };
+
+          this.resetResults();
+          return this.searchRideService.searchRides(this.lastPayload);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((res) => this.initializeFromResponse(res));
   }
 
-  private initializeFromState(res: RideSearchResponse) {
+  private resetResults(): void {
+    this.page = 1;
+    this.noMoreResults = false;
+    this.rides = [];
+  }
+
+  private initializeFromResponse(res: RideSearchResponse): void {
     this.status = res.status;
-    this.rides = res.rides.map((r) => ({ ...r, showDetails: false, participating: false }));
+    this.rides = res.rides.map((r) => ({
+      ...r,
+      showDetails: false,
+      participating: false,
+    }));
     this.totalResults = res.totalResults ?? res.rides.length;
     this.page = 2;
-    this.noMoreResults = this.rides.length >= (res.totalResults ?? 0);
+    this.noMoreResults = this.rides.length >= this.totalResults;
   }
 
   loadRides(): void {
@@ -53,27 +85,24 @@ export class Results implements OnInit {
 
     this.searchRideService
       .searchRides({
-        originCity: '',
-        destinyCity: '',
-        date: { year: 0, month: 0, day: 0 },
+        ...this.lastPayload,
         page: this.page,
       })
       .subscribe({
-        next: (res: RideSearchResponse) => {
-          const ridesWithFlags = res.rides.map((r) => ({
-            ...r,
-            showDetails: false,
-            participating: false,
-          }));
-          this.rides.push(...ridesWithFlags);
-          this.totalResults = res.totalResults ?? res.rides.length;
+        next: (res) => {
+          this.rides.push(
+            ...res.rides.map((r) => ({
+              ...r,
+              showDetails: false,
+              participating: false,
+            }))
+          );
+
           if (this.rides.length >= this.totalResults) this.noMoreResults = true;
           this.page++;
           this.isLoading = false;
         },
-        error: () => {
-          this.isLoading = false;
-        },
+        error: () => (this.isLoading = false),
       });
   }
 
@@ -132,5 +161,10 @@ export class Results implements OnInit {
         error: (err) => console.error("Erreur lors de l'annulation de la participation", err),
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

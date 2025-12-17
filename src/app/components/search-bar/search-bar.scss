@@ -26,6 +26,24 @@
         flex-direction: column;
         width: 220px;
         position: relative;
+
+        .autocomplete {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          z-index: 1050;
+          margin-top: 2px;
+          max-height: 240px;
+          overflow-y: auto;
+          background-color: white;
+          border: 1px solid $dark;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          font-size: 14px;
+          color: $primary;
+          font-family: $font-content;
+        }
       }
 
       .error {
@@ -37,7 +55,6 @@
       }
 
       .input-wrapper {
-        position: relative;
         width: 100%;
 
         i {
@@ -94,17 +111,6 @@
         border-radius: 6px;
         background-color: transparent;
       }
-    }
-
-    .ngb-dp-weekday {
-      color: $secondary;
-      font-weight: 600;
-    }
-
-    .btn-link {
-      color: $primary;
-      font-size: 1.2rem;
-      cursor: pointer;
     }
 
     @media (max-width: $breakpointMaxWidth) {

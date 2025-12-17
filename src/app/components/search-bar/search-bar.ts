@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { ValidationService } from '../../services/validation';
-import { SearchRideService } from '../../services/search-ride';
-import { RideSearchRequest } from '../../models/ride-search-request.model';
+import { City, CityService } from '../../services/city';
 
 @Component({
   selector: 'app-search-bar',
@@ -13,7 +14,7 @@ import { RideSearchRequest } from '../../models/ride-search-request.model';
   templateUrl: './search-bar.html',
   styleUrls: ['./search-bar.scss'],
 })
-export class SearchBar {
+export class SearchBar implements OnDestroy {
   form: FormGroup;
 
   // Error messages displayed below fields
@@ -21,11 +22,18 @@ export class SearchBar {
   errorDestiny = '';
   errorDate = '';
 
+  // Autocomplete lists
+  originSuggestions: City[] = [];
+  destinySuggestions: City[] = [];
+
+  private destroy$ = new Subject<void>();
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
     public validation: ValidationService,
-    private searchRideService: SearchRideService
+    private cityService: CityService
   ) {
     // Reactive form without built-in Angular validators
     // because validation is handled by ValidationService
@@ -34,6 +42,47 @@ export class SearchBar {
       destinyCity: [''],
       date: [null], // NgbDateStruct
     });
+    this.initAutocomplete();
+  }
+
+  private initAutocomplete(): void {
+    // Origin city autocomplete
+    this.form
+      .get('originCity')!
+      .valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        filter((value) => typeof value === 'string' && value.length >= 3),
+        switchMap((value) => this.cityService.searchCities(value)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((cities) => {
+        this.originSuggestions = cities;
+      });
+
+    // Destiny city autocomplete
+    this.form
+      .get('destinyCity')!
+      .valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        filter((value) => typeof value === 'string' && value.length >= 3),
+        switchMap((value) => this.cityService.searchCities(value)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((cities) => {
+        this.destinySuggestions = cities;
+      });
+  }
+
+  selectOrigin(city: City): void {
+    this.form.patchValue({ originCity: city.nom });
+    this.originSuggestions = [];
+  }
+
+  selectDestiny(city: City): void {
+    this.form.patchValue({ destinyCity: city.nom });
+    this.destinySuggestions = [];
   }
 
   onSearch(): void {
@@ -57,31 +106,24 @@ export class SearchBar {
       return;
     }
 
-    // JSON payload sent to backend
-    const payload: RideSearchRequest = {
+    // QueryParams
+    const queryParams = {
       originCity,
       destinyCity,
-      date,
-      page: 1,
+      year: date.year,
+      month: date.month,
+      day: date.day,
     };
 
     // Send search request to backend API
-    this.searchRideService.searchRides(payload).subscribe({
-      next: (response) => {
-        // Navigate to /results and pass data through navigation state
-        this.router.navigate(['/results'], {
-          state: { results: response },
-          queryParams: {
-            originCity,
-            destinyCity,
-            year: date.year,
-            month: date.month,
-            day: date.day,
-          },
-        });
-      },
-      error: (err) => console.error(err),
-    });
+    if (this.router.url.startsWith('/results')) {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams,
+      });
+    } else {
+      this.router.navigate(['/results'], { queryParams });
+    }
   }
 
   private clearErrors() {
@@ -89,5 +131,10 @@ export class SearchBar {
     this.errorOrigin = '';
     this.errorDestiny = '';
     this.errorDate = '';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

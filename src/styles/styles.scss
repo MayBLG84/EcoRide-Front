@@ -1,5 +1,5 @@
-@use 'variables' as *;
-@use 'bootstrap/scss/bootstrap' as *;
+@use 'variables' as v;
+@use 'bootstrap/scss/bootstrap' as b;
 @use 'mixins' as *;
 @use 'custom' as *;
 
@@ -8,6 +8,19 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+
+  .ngb-dp-weekday {
+    color: v.$secondary !important;
+    font-weight: 600 !important;
+  }
+
+  .ngb-dp-navigation,
+  .btn-link,
+  .ngb-dp-navigation-chevron,
+  .ngb-dp-arrow-btn {
+    color: v.$primary !important;
+    font-weight: 600 !important;
+  }
 }
 
 app-root {

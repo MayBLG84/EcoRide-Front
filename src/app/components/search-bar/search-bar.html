@@ -4,9 +4,22 @@
       <div class="field">
         <div class="input-wrapper">
           <i class="bi bi-geo-alt-fill"></i>
-          <input type="text" formControlName="originCity" placeholder="Ville de départ" required />
+          <input
+            type="text"
+            formControlName="originCity"
+            placeholder="Ville de départ"
+            autocomplete="off"
+          />
         </div>
-        @if ((!validation.isNonEmpty(form.value.originCity) ||
+        @if (originSuggestions.length) {
+        <ul class="list-group autocomplete">
+          @for (city of originSuggestions; track city.code) {
+          <li class="list-group-item list-group-item-action" (click)="selectOrigin(city)">
+            {{ city.nom }}
+          </li>
+          }
+        </ul>
+        } @if ((!validation.isNonEmpty(form.value.originCity) ||
         !validation.isValidCity(form.value.originCity)) && form.get('originCity')?.touched) {
         <small class="error">{{ errorOrigin }}</small>
         }
@@ -15,9 +28,23 @@
       <div class="field">
         <div class="input-wrapper">
           <i class="bi bi-flag-fill"></i>
-          <input type="text" formControlName="destinyCity" placeholder="Ville d'arrivée" required />
+          <input
+            type="text"
+            formControlName="destinyCity"
+            placeholder="Ville d'arrivée"
+            autocomplete="off"
+          />
         </div>
-        @if ((!validation.isNonEmpty(form.value.destinyCity) ||
+
+        @if (destinySuggestions.length) {
+        <ul class="list-group autocomplete">
+          @for (city of destinySuggestions; track city.code) {
+          <li class="list-group-item list-group-item-action" (click)="selectDestiny(city)">
+            {{ city.nom }}
+          </li>
+          }
+        </ul>
+        } @if ((!validation.isNonEmpty(form.value.destinyCity) ||
         !validation.isValidCity(form.value.destinyCity)) && form.get('destinyCity')?.touched) {
         <small class="error">{{ errorDestiny }}</small>
         }
