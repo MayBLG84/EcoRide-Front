@@ -53,16 +53,236 @@ h5 {
     margin-bottom: 20px;
   }
 
+  .filters {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 880px;
+    margin-bottom: 10px;
+
+    .btn-show-filter {
+      width: 160px;
+      background-color: $bg-dark;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: $font-content;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      i {
+        margin-right: 10px;
+        flex: 0 0 auto;
+        margin-right: 8px;
+      }
+
+      span {
+        flex: 1;
+        text-align: center;
+      }
+    }
+
+    .btn-order-list {
+      width: 100px;
+      color: $bg-dark;
+      border-color: $bg-dark;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: $font-content;
+      font-size: 14px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: $breakpointMaxWidth) {
+      width: 280px;
+    }
+  }
+
+  .filters-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-family: $font-content;
+    font-size: 12px;
+
+    @media (max-width: $breakpointMaxWidth) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  .filter-box {
+    display: flex;
+    align-items: center;
+    padding: 4px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    white-space: nowrap;
+    height: 30px;
+
+    @media (max-width: $breakpointMaxWidth) {
+      width: 280px;
+      justify-content: center;
+    }
+  }
+
+  .filter-box.electric {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    .form-check {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+
+      .switch-label {
+        margin-left: 8px;
+        font-family: $font-content;
+        font-size: 12px;
+      }
+
+      .form-check-input.primary-toggle {
+        width: 36px;
+        height: 18px;
+        flex-shrink: 0;
+        cursor: pointer;
+
+        &:checked {
+          background-color: $primary !important;
+          border-color: $primary !important;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 0.25rem rgba($primary, 0.25);
+        }
+
+        .form-check-input.primary-toggle::-moz-focus-inner {
+          border: 0;
+        }
+      }
+    }
+
+    @media (max-width: $breakpointMaxWidth) {
+      justify-content: center;
+
+      .form-check {
+        justify-content: center;
+        gap: 8px;
+      }
+    }
+  }
+
+  .filter-box.rating {
+    justify-content: flex-end;
+
+    .span-text {
+      margin-right: 8px;
+    }
+
+    i {
+      color: $tertiary;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    @media (max-width: $breakpointMaxWidth) {
+      justify-content: center;
+    }
+  }
+
+  .filter-box.price,
+  .filter-box.duration {
+    flex: 1;
+    justify-content: center;
+
+    span {
+      margin-right: 8px;
+    }
+  }
+
+  .filter-box input[type='range'] {
+    width: 100px;
+
+    &::-webkit-slider-thumb {
+      background-color: $primary;
+    }
+
+    &::-moz-range-thumb {
+      background-color: $primary;
+    }
+
+    &::-ms-thumb {
+      background-color: $primary;
+    }
+  }
+
+  .btn-apply-filters-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .btn-apply-filters {
+    background-color: $secondary;
+    color: $bg-dark;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: $font-content;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .btn-clear-filters {
+    background-color: transparent;
+    color: $primary;
+    border: 1px solid $primary;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: $font-content;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      background-color: $primary;
+      color: white;
+    }
+  }
+
   .rides-field {
     width: 880px;
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
     gap: 20px;
 
     @media (min-width: $breakpointMinWidth) {
       flex-direction: row;
       justify-content: center;
+      align-items: flex-start;
     }
   }
 

@@ -5,14 +5,16 @@ import { switchMap, filter, takeUntil } from 'rxjs/operators';
 import { SearchRideService } from '../../services/search-ride';
 import { RideParticipation } from '../../services/ride-participation';
 import { Auth } from '../../services/auth';
-import { Ride, RideSearchResponse } from '../../models/ride-search-response.model';
+import { FiltersMeta, Ride, RideSearchResponse } from '../../models/ride-search-response.model';
 import { RideParticipationRequest } from '../../models/ride-participation-request.model';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { RideSearchRequest } from '../../models/ride-search-request.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-results',
-  imports: [SearchBar],
+  imports: [CommonModule, FormsModule, SearchBar],
   templateUrl: './results.html',
   styleUrls: ['./results.scss'],
 })
@@ -24,6 +26,38 @@ export class Results implements OnInit, OnDestroy {
   isLoading: boolean = false;
   noMoreResults: boolean = false;
   status: 'EXACT_MATCH' | 'FUTURE_MATCH' | 'NO_MATCH' | 'INVALID_REQUEST' = 'NO_MATCH';
+  filtersVisible: boolean = false;
+  orderBy: '' | 'PRICE_ASC' | 'PRICE_DESC' | 'DURATION_ASC' | 'DURATION_DESC' = '';
+
+  public filters = {
+    priceMin: 0,
+    priceMax: 250,
+    durationMin: 0,
+    durationMax: 1440,
+    ratingMin: 0,
+    electricOnly: false,
+  };
+
+  public defaultFilters = {
+    priceMin: 0,
+    priceMax: 250,
+    durationMin: 0,
+    durationMax: 1440,
+    ratingMin: 0,
+    electricOnly: false,
+  };
+
+  public filtersMeta: FiltersMeta = {
+    price: { min: 0, max: 0 },
+    duration: { min: 0, max: 0 },
+    rating: { min: 0, max: 5 },
+  };
+
+  public defaultFiltersMeta: FiltersMeta = {
+    price: { min: 0, max: 250 },
+    duration: { min: 0, max: 1440 },
+    rating: { min: 0, max: 5 },
+  };
 
   private destroy$ = new Subject<void>();
   private lastPayload!: RideSearchRequest;
@@ -36,6 +70,9 @@ export class Results implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  // ─────────────────────────────────────────────
+  // INIT
+  // ─────────────────────────────────────────────
   ngOnInit(): void {
     this.route.queryParams
       .pipe(
@@ -50,6 +87,9 @@ export class Results implements OnInit, OnDestroy {
               day: +params['day'],
             },
             page: 1,
+            limit: this.pageSize,
+            filters: { ...this.filters },
+            orderBy: this.orderBy || undefined,
           };
 
           this.resetResults();
@@ -60,6 +100,9 @@ export class Results implements OnInit, OnDestroy {
       .subscribe((res) => this.initializeFromResponse(res));
   }
 
+  // ─────────────────────────────────────────────
+  // SEARCH HANDLING
+  // ─────────────────────────────────────────────
   private resetResults(): void {
     this.page = 1;
     this.noMoreResults = false;
@@ -74,12 +117,13 @@ export class Results implements OnInit, OnDestroy {
       participating: false,
     }));
     this.totalResults = res.totalResults ?? res.rides.length;
+    this.filtersMeta = res.filtersMeta ?? this.defaultFiltersMeta;
     this.page = 2;
     this.noMoreResults = this.rides.length >= this.totalResults;
   }
 
-  loadRides(): void {
-    if (this.noMoreResults || this.isLoading) return;
+  private performSearch(reset = true): void {
+    if (reset) this.resetResults();
 
     this.isLoading = true;
 
@@ -87,25 +131,85 @@ export class Results implements OnInit, OnDestroy {
       .searchRides({
         ...this.lastPayload,
         page: this.page,
+        limit: this.pageSize,
+        orderBy: this.orderBy || undefined,
+        filters: this.filters,
       })
       .subscribe({
         next: (res) => {
-          this.rides.push(
-            ...res.rides.map((r) => ({
-              ...r,
-              showDetails: false,
-              participating: false,
-            }))
-          );
-
-          if (this.rides.length >= this.totalResults) this.noMoreResults = true;
-          this.page++;
+          if (reset) {
+            this.initializeFromResponse(res);
+          } else {
+            this.rides.push(
+              ...res.rides.map((r) => ({
+                ...r,
+                showDetails: false,
+                participating: false,
+              }))
+            );
+            this.page++;
+            if (this.rides.length >= this.totalResults) this.noMoreResults = true;
+          }
           this.isLoading = false;
         },
         error: () => (this.isLoading = false),
       });
   }
 
+  // ─────────────────────────────────────────────
+  // FILTERS & ORDER
+  // ─────────────────────────────────────────────
+  toggleFilters(): void {
+    this.filtersVisible = !this.filtersVisible;
+  }
+
+  applyFilters(): void {
+    this.page = 1;
+    this.performSearch(true);
+  }
+
+  applyOrder(): void {
+    this.page = 1;
+    this.performSearch(true);
+  }
+
+  formatDuration(minutes: number | null): string {
+    if (minutes == null) {
+      return '0';
+    }
+
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+
+    return `${h} h ${m.toString().padStart(2, '0')}`;
+  }
+
+  clearFilters(): void {
+    this.filters = { ...this.defaultFilters };
+    this.page = 1;
+    this.performSearch(true);
+  }
+
+  hasActiveFilters(): boolean {
+    return (
+      this.filters.electricOnly ||
+      this.filters.ratingMin > 0 ||
+      this.filters.priceMax !== this.defaultFilters.priceMax ||
+      this.filters.durationMax !== this.defaultFilters.durationMax
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  // PAGINATION
+  // ─────────────────────────────────────────────
+  loadRides(): void {
+    if (this.noMoreResults || this.isLoading) return;
+    this.performSearch(false);
+  }
+
+  // ─────────────────────────────────────────────
+  // UI HELPERS
+  // ─────────────────────────────────────────────
   getStarType(starNumber: number, avgRating: number | null): 'full' | 'half' | 'empty' {
     if (avgRating === null) return 'empty';
 
@@ -129,6 +233,9 @@ export class Results implements OnInit, OnDestroy {
     ride.showDetails = !ride.showDetails;
   }
 
+  // ─────────────────────────────────────────────
+  // PARTICIPATION
+  // ─────────────────────────────────────────────
   participate(ride: Ride): void {
     if (!this.auth.isLoggedIn()) {
       this.router.navigate(['/login']);
@@ -163,6 +270,9 @@ export class Results implements OnInit, OnDestroy {
     }
   }
 
+  // ─────────────────────────────────────────────
+  // DESTROY
+  // ─────────────────────────────────────────────
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

@@ -21,6 +21,97 @@
   </div>
   }
 
+  <!-- FILTERS & ORDER BAR -->
+  @if (status === 'EXACT_MATCH') {
+  <div class="filters-section">
+    <div class="filters">
+      <!-- Toggle filters -->
+      <button class="btn btn-show-filter" (click)="toggleFilters()">
+        <i class="bi bi-funnel"></i>
+        <span>{{ filtersVisible ? 'Cacher les filtres' : 'Voir les filtres' }}</span>
+      </button>
+
+      <!-- Order -->
+      <select class="btn btn-order-list" [(ngModel)]="orderBy" (change)="applyOrder()">
+        <option value="" disabled>Trier par</option>
+        <option value="PRICE_ASC">Prix croissant</option>
+        <option value="PRICE_DESC">Prix décroissant</option>
+        <option value="DURATION_ASC">Durée croissante</option>
+        <option value="DURATION_DESC">Durée décroissante</option>
+      </select>
+    </div>
+
+    <!-- FILTER PANEL -->
+    @if (filtersVisible) {
+    <div class="filters-panel">
+      <!-- Electric -->
+      <div class="filter-box electric">
+        <div class="form-check form-switch mb-0">
+          <input
+            class="form-check-input primary-toggle"
+            type="checkbox"
+            id="electricSwitch"
+            [(ngModel)]="filters.electricOnly"
+          />
+          <label class="form-check-label switch-label" for="electricSwitch"
+            >Voiture électrique</label
+          >
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div class="filter-box price">
+        <span>Prix:</span>
+        <small>{{ filters.priceMin }} €</small>
+        <input
+          type="range"
+          class="form-range mx-2"
+          [min]="filtersMeta!.price.min"
+          [max]="filtersMeta!.price.max"
+          [(ngModel)]="filters.priceMax"
+        />
+        <small>{{ filters.priceMax }} €</small>
+      </div>
+
+      <!-- Duration -->
+      <div class="filter-box duration">
+        <span>Durée:</span>
+        <small>{{ formatDuration(filters.durationMin) }}</small>
+        <input
+          type="range"
+          class="form-range mx-2"
+          [min]="filtersMeta!.duration.min"
+          [max]="filtersMeta!.duration.max"
+          [(ngModel)]="filters.durationMax"
+        />
+        <small>{{ formatDuration(filters.durationMax) }}</small>
+      </div>
+
+      <!-- Rating -->
+      <div class="filter-box rating">
+        <span class="span-text">Conducteur.trice:</span>
+        @for (s of [1, 2, 3, 4, 5]; track s) {
+        <span class="star-icon" (click)="filters.ratingMin = s">
+          <i
+            [class.bi-star]="s > filters.ratingMin"
+            [class.bi-star-fill]="s <= filters.ratingMin"
+          ></i>
+        </span>
+        }
+        <span class="ms-1">ou +</span>
+      </div>
+    </div>
+    <div class="btn-apply-filters-section">
+      <!-- APPLY -->
+      <button class="btn-apply-filters" (click)="applyFilters()">Appliquer les filtres</button>
+      @if (hasActiveFilters()) {
+      <button class="btn-clear-filters" (click)="clearFilters()">Réinitialiser les filtres</button>
+      }
+    </div>
+    }
+  </div>
+  }
+
   <div class="rides-field">
     <!-- RIDE CARD -->
     @for (ride of rides; track ride.id) {
@@ -60,11 +151,10 @@
         <h3>{{ ride.date }}</h3>
       </div>
       <div class="ride-seats">
-        @if (ride.availableSeats === 1){
-        <p>Il y a {{ ride.availableSeats }} place disponible !</p>
-        } @else {
-        <p>Il y a {{ ride.availableSeats }} places disponibles !</p>
-        }
+        <p>
+          Il y a {{ ride.availableSeats }}
+          {{ ride.availableSeats === 1 ? 'place' : 'places' }} disponible(s)
+        </p>
       </div>
 
       <!-- Main Content -->
@@ -83,7 +173,7 @@
         </div>
         <div class="item-ride">
           <h6>Durée estimée :</h6>
-          <p>{{ ride.estimatedDuration }}</p>
+          <p>{{ formatDuration(ride.estimatedDuration) }}</p>
         </div>
       </div>
 

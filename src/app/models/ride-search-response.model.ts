@@ -11,7 +11,7 @@ export interface Ride {
   availableSeats: number;
   origin: { city: string; pickPoint?: string };
   destiny: { city: string; dropPoint?: string };
-  estimatedDuration: string | null;
+  estimatedDuration: number | null;
   vehicle: { brand?: string; model?: string; isElectric: boolean };
   preferences: { smoker?: boolean; animals?: boolean; other?: string };
   pricePerPerson: number;
@@ -19,9 +19,16 @@ export interface Ride {
   participating?: boolean;
 }
 
+export interface FiltersMeta {
+  price: { min: number; max: number };
+  duration: { min: number; max: number };
+  rating: { min: number; max: number };
+}
+
 export interface RideSearchResponse {
   status: 'EXACT_MATCH' | 'FUTURE_MATCH' | 'NO_MATCH' | 'INVALID_REQUEST';
   rides: Ride[];
   pagination?: { page: number; pageSize: number; totalResults: number };
   totalResults?: number;
+  filtersMeta?: FiltersMeta;
 }
