@@ -5,14 +5,6 @@
 </section>
 
 <section class="results-container">
-  <!-- NO RESULTS -->
-  @if (status === 'NO_MATCH' && !isLoading) {
-  <div class="no-results">
-    Malheureusement, aucun résultat ne correspond pas à votre recherche, ni à la date choisie, ni
-    aux dates à venir.
-  </div>
-  }
-
   <!-- FUTURE MATCHS -->
   @if (status === 'FUTURE_MATCH' && !isLoading) {
   <div class="future-results-message">
@@ -22,7 +14,7 @@
   }
 
   <!-- FILTERS & ORDER BAR -->
-  @if (status === 'EXACT_MATCH') {
+  @if (status === 'EXACT_MATCH' || (status === 'NO_MATCH' && hasActiveFilters())) {
   <div class="filters-section">
     <div class="filters">
       <!-- Toggle filters -->
@@ -33,7 +25,7 @@
 
       <!-- Order -->
       <select class="btn btn-order-list" [(ngModel)]="orderBy" (change)="applyOrder()">
-        <option value="" disabled>Trier par</option>
+        <option [ngValue]="undefined" disabled>Trier par</option>
         <option value="PRICE_ASC">Prix croissant</option>
         <option value="PRICE_DESC">Prix décroissant</option>
         <option value="DURATION_ASC">Durée croissante</option>
@@ -51,7 +43,7 @@
             class="form-check-input primary-toggle"
             type="checkbox"
             id="electricSwitch"
-            [(ngModel)]="filters.electricOnly"
+            [(ngModel)]="uiFilters.electricOnly"
           />
           <label class="form-check-label switch-label" for="electricSwitch"
             >Voiture électrique</label
@@ -62,39 +54,35 @@
       <!-- Price -->
       <div class="filter-box price">
         <span>Prix:</span>
-        <small>{{ filters.priceMin }} €</small>
-        <input
-          type="range"
-          class="form-range mx-2"
-          [min]="filtersMeta!.price.min"
-          [max]="filtersMeta!.price.max"
-          [(ngModel)]="filters.priceMax"
-        />
-        <small>{{ filters.priceMax }} €</small>
+        <small>{{ uiFilters.priceMin }} €</small>
+        <ngx-slider
+          [(value)]="uiFilters.priceMin"
+          [(highValue)]="uiFilters.priceMax"
+          [options]="priceSliderOptions"
+        ></ngx-slider>
+        <small>{{ uiFilters.priceMax }} €</small>
       </div>
 
       <!-- Duration -->
       <div class="filter-box duration">
         <span>Durée:</span>
-        <small>{{ formatDuration(filters.durationMin) }}</small>
-        <input
-          type="range"
-          class="form-range mx-2"
-          [min]="filtersMeta!.duration.min"
-          [max]="filtersMeta!.duration.max"
-          [(ngModel)]="filters.durationMax"
-        />
-        <small>{{ formatDuration(filters.durationMax) }}</small>
+        <small>{{ formatDuration(uiFilters.durationMin) }}</small>
+        <ngx-slider
+          [(value)]="uiFilters.durationMin"
+          [(highValue)]="uiFilters.durationMax"
+          [options]="durationSliderOptions"
+        ></ngx-slider>
+        <small>{{ formatDuration(uiFilters.durationMax) }}</small>
       </div>
 
       <!-- Rating -->
       <div class="filter-box rating">
         <span class="span-text">Conducteur.trice:</span>
         @for (s of [1, 2, 3, 4, 5]; track s) {
-        <span class="star-icon" (click)="filters.ratingMin = s">
+        <span class="star-icon" (click)="uiFilters.ratingMin = s">
           <i
-            [class.bi-star]="s > filters.ratingMin"
-            [class.bi-star-fill]="s <= filters.ratingMin"
+            [class.bi-star]="s > uiFilters.ratingMin"
+            [class.bi-star-fill]="s <= uiFilters.ratingMin"
           ></i>
         </span>
         }
@@ -109,6 +97,13 @@
       }
     </div>
     }
+  </div>
+  }
+
+  <!-- NO RESULTS -->
+  @if (status === 'NO_MATCH' && !isLoading) {
+  <div class="no-results">
+    {{ noResultsMessage }}
   </div>
   }
 
@@ -242,16 +237,15 @@
     </div>
 
     }
-
-    <!-- Show More Button -->
-    @if (rides.length < totalResults) {
-    <div class="show-more-container">
-      <button class="btn btn-show-more" (click)="loadRides()" [disabled]="isLoading">
-        {{ isLoading ? 'Chargement...' : 'Voir plus de résultats' }}
-      </button>
-    </div>
-    }
   </div>
+  <!-- Show More Button -->
+  @if (rides.length < totalResults) {
+  <div class="show-more-container">
+    <button class="btn btn-show-more" (click)="loadRides()" [disabled]="isLoading">
+      {{ isLoading ? 'Chargement...' : 'Voir plus de résultats' }}
+    </button>
+  </div>
+  }
 
   <!-- LOADING -->
   @if (isLoading) {

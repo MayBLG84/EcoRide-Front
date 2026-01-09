@@ -206,26 +206,55 @@ h5 {
   .filter-box.price,
   .filter-box.duration {
     flex: 1;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    gap: 8px;
+    width: auto;
+    max-width: 300px;
 
-    span {
-      margin-right: 8px;
-    }
-  }
-
-  .filter-box input[type='range'] {
-    width: 100px;
-
-    &::-webkit-slider-thumb {
-      background-color: $primary;
+    span,
+    small {
+      flex-shrink: 0;
     }
 
-    &::-moz-range-thumb {
-      background-color: $primary;
-    }
+    ngx-slider {
+      flex: 1;
+      height: 24px;
+      position: relative;
+      margin: 0 4px;
 
-    &::-ms-thumb {
-      background-color: $primary;
+      ::ng-deep .ngx-slider-bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 87%;
+        transform: translateY(-50%);
+        height: 4px;
+        background-color: lighten($primary, 30%);
+        border-radius: 2px;
+      }
+
+      ::ng-deep .ngx-slider-selection {
+        position: absolute;
+        top: 87%;
+        transform: translateY(-50%);
+        height: 4px;
+        background-color: $primary;
+        border-radius: 2px;
+      }
+
+      ::ng-deep .ngx-slider-pointer {
+        position: absolute;
+        top: 13%;
+        transform: translate(-50%, -50%);
+        width: 18px;
+        height: 18px;
+        border: 2px solid $primary;
+        background-color: white;
+        border-radius: 50%;
+        z-index: 2;
+      }
     }
   }
 
@@ -278,6 +307,7 @@ h5 {
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    margin-bottom: 12px;
 
     @media (min-width: $breakpointMinWidth) {
       flex-direction: row;

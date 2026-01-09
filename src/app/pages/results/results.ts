@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { switchMap, filter, takeUntil } from 'rxjs/operators';
 import { SearchRideService } from '../../services/search-ride';
 import { RideParticipation } from '../../services/ride-participation';
 import { Auth } from '../../services/auth';
@@ -11,32 +10,38 @@ import { SearchBar } from '../../components/search-bar/search-bar';
 import { RideSearchRequest } from '../../models/ride-search-request.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SearchStateService } from '../../services/search-state';
+import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
+
+const DEFAULT_UI_FILTERS = {
+  priceMin: 0,
+  priceMax: 250,
+  durationMin: 0,
+  durationMax: 1440,
+  ratingMin: 0,
+  electricOnly: false,
+};
 
 @Component({
   selector: 'app-results',
-  imports: [CommonModule, FormsModule, SearchBar],
+  imports: [CommonModule, FormsModule, SearchBar, NgxSliderModule],
   templateUrl: './results.html',
   styleUrls: ['./results.scss'],
 })
 export class Results implements OnInit, OnDestroy {
-  rides: Ride[] = [];
-  page: number = 1;
-  pageSize: number = 18;
-  totalResults: number = 0;
-  isLoading: boolean = false;
-  noMoreResults: boolean = false;
-  status: 'EXACT_MATCH' | 'FUTURE_MATCH' | 'NO_MATCH' | 'INVALID_REQUEST' = 'NO_MATCH';
-  filtersVisible: boolean = false;
-  orderBy: '' | 'PRICE_ASC' | 'PRICE_DESC' | 'DURATION_ASC' | 'DURATION_DESC' = '';
+  public rides: Ride[] = [];
+  private page: number = 1;
+  private pageSize: number = 18;
+  public totalResults: number = 0;
+  public isLoading: boolean = false;
+  private noMoreResults: boolean = false;
+  public status: 'EXACT_MATCH' | 'FUTURE_MATCH' | 'NO_MATCH' | 'INVALID_REQUEST' = 'NO_MATCH';
+  public filtersVisible: boolean = false;
+  public orderBy?: 'PRICE_ASC' | 'PRICE_DESC' | 'DURATION_ASC' | 'DURATION_DESC';
 
-  public filters = {
-    priceMin: 0,
-    priceMax: 250,
-    durationMin: 0,
-    durationMax: 1440,
-    ratingMin: 0,
-    electricOnly: false,
-  };
+  public uiFilters = { ...DEFAULT_UI_FILTERS };
+
+  public filters?: RideSearchRequest['filters'];
 
   public defaultFilters = {
     priceMin: 0,
@@ -59,12 +64,33 @@ export class Results implements OnInit, OnDestroy {
     rating: { min: 0, max: 5 },
   };
 
+  public noResultsMessage: string = '';
   private destroy$ = new Subject<void>();
   private lastPayload!: RideSearchRequest;
 
+  public priceSliderOptions: Options = {
+    floor: this.filtersMeta.price.min,
+    ceil: this.filtersMeta.price.max,
+    draggableRange: true,
+    step: 0.5,
+    showSelectionBar: true,
+    showTicks: false,
+    translate: (value: number): string => '',
+  };
+
+  public durationSliderOptions: Options = {
+    floor: this.filtersMeta.duration.min,
+    ceil: this.filtersMeta.duration.max,
+    draggableRange: true,
+    step: 5,
+    showSelectionBar: true,
+    showTicks: false,
+    translate: (value: number): string => '',
+  };
+
   constructor(
     private searchRideService: SearchRideService,
-    private route: ActivatedRoute,
+    private searchState: SearchStateService,
     private rideParticipation: RideParticipation,
     public auth: Auth,
     private router: Router
@@ -73,31 +99,44 @@ export class Results implements OnInit, OnDestroy {
   // ─────────────────────────────────────────────
   // INIT
   // ─────────────────────────────────────────────
-  ngOnInit(): void {
-    this.route.queryParams
-      .pipe(
-        filter((params) => !!params['originCity']),
-        switchMap((params) => {
-          this.lastPayload = {
-            originCity: params['originCity'],
-            destinyCity: params['destinyCity'],
-            date: {
-              year: +params['year'],
-              month: +params['month'],
-              day: +params['day'],
-            },
-            page: 1,
-            limit: this.pageSize,
-            filters: { ...this.filters },
-            orderBy: this.orderBy || undefined,
-          };
+  public ngOnInit(): void {
+    const state = this.searchState.getState();
 
-          this.resetResults();
-          return this.searchRideService.searchRides(this.lastPayload);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((res) => this.initializeFromResponse(res));
+    if (!state.originCity || !state.destinyCity || !state.date) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    this.lastPayload = {
+      ...state,
+      page: 1,
+      limit: this.pageSize,
+    };
+    this.filters = undefined;
+    this.orderBy = undefined;
+    this.performSearch(true);
+
+    this.searchState.getStateObservable().subscribe((newState) => {
+      if (!newState.originCity || !newState.destinyCity || !newState.date) return;
+
+      // Changes onde search-bar => new search
+      const isNewSearch =
+        newState.originCity !== this.lastPayload.originCity ||
+        newState.destinyCity !== this.lastPayload.destinyCity ||
+        newState.date?.year !== this.lastPayload.date?.year ||
+        newState.date?.month !== this.lastPayload.date?.month ||
+        newState.date?.day !== this.lastPayload.date?.day;
+
+      if (isNewSearch) {
+        this.lastPayload = { ...newState, page: 1, limit: this.pageSize };
+
+        // Reset filters and orderBy
+        this.filters = undefined;
+        this.orderBy = undefined;
+
+        this.performSearch(true);
+      }
+    });
   }
 
   // ─────────────────────────────────────────────
@@ -111,15 +150,36 @@ export class Results implements OnInit, OnDestroy {
 
   private initializeFromResponse(res: RideSearchResponse): void {
     this.status = res.status;
+
     this.rides = res.rides.map((r) => ({
       ...r,
       showDetails: false,
       participating: false,
     }));
+
     this.totalResults = res.totalResults ?? res.rides.length;
-    this.filtersMeta = res.filtersMeta ?? this.defaultFiltersMeta;
     this.page = 2;
     this.noMoreResults = this.rides.length >= this.totalResults;
+
+    if (res.filtersMeta) {
+      this.filtersMeta = res.filtersMeta;
+
+      this.uiFilters.priceMin = res.filtersMeta.price.min;
+      this.uiFilters.priceMax = res.filtersMeta.price.max;
+      this.uiFilters.durationMin = res.filtersMeta.duration.min;
+      this.uiFilters.durationMax = res.filtersMeta.duration.max;
+
+      this.priceSliderOptions = {
+        ...this.priceSliderOptions,
+        floor: res.filtersMeta.price.min,
+        ceil: res.filtersMeta.price.max,
+      };
+      this.durationSliderOptions = {
+        ...this.durationSliderOptions,
+        floor: res.filtersMeta.duration.min,
+        ceil: res.filtersMeta.duration.max,
+      };
+    }
   }
 
   private performSearch(reset = true): void {
@@ -132,7 +192,7 @@ export class Results implements OnInit, OnDestroy {
         ...this.lastPayload,
         page: this.page,
         limit: this.pageSize,
-        orderBy: this.orderBy || undefined,
+        orderBy: this.orderBy,
         filters: this.filters,
       })
       .subscribe({
@@ -150,6 +210,19 @@ export class Results implements OnInit, OnDestroy {
             this.page++;
             if (this.rides.length >= this.totalResults) this.noMoreResults = true;
           }
+
+          if (res.status === 'NO_MATCH') {
+            const isFilteredSearch = this.hasActiveFilters() || !!this.orderBy;
+            if (isFilteredSearch) {
+              this.noResultsMessage = this.buildNoResultsMessage();
+            } else {
+              this.noResultsMessage =
+                'Malheureusement, aucun covoiturage ne correspond à vos critères de recherche.';
+            }
+          } else {
+            this.noResultsMessage = '';
+          }
+
           this.isLoading = false;
         },
         error: () => (this.isLoading = false),
@@ -159,21 +232,34 @@ export class Results implements OnInit, OnDestroy {
   // ─────────────────────────────────────────────
   // FILTERS & ORDER
   // ─────────────────────────────────────────────
-  toggleFilters(): void {
+  public toggleFilters(): void {
     this.filtersVisible = !this.filtersVisible;
   }
 
-  applyFilters(): void {
-    this.page = 1;
+  public applyFilters(): void {
+    const f: RideSearchRequest['filters'] = {};
+
+    if (this.uiFilters.electricOnly) f.electricOnly = true;
+    if (this.uiFilters.ratingMin > 0) f.ratingMin = this.uiFilters.ratingMin;
+    if (this.uiFilters.priceMax < DEFAULT_UI_FILTERS.priceMax) {
+      f.priceMax = this.uiFilters.priceMax;
+    }
+    if (this.uiFilters.durationMax < DEFAULT_UI_FILTERS.durationMax) {
+      f.durationMax = this.uiFilters.durationMax;
+    }
+
+    this.filters = Object.keys(f).length ? f : undefined;
+
+    this.searchState.setFilters(this.filters);
     this.performSearch(true);
   }
 
-  applyOrder(): void {
-    this.page = 1;
+  public applyOrder(): void {
+    this.searchState.setOrder(this.orderBy);
     this.performSearch(true);
   }
 
-  formatDuration(minutes: number | null): string {
+  public formatDuration(minutes: number | null): string {
     if (minutes == null) {
       return '0';
     }
@@ -184,33 +270,94 @@ export class Results implements OnInit, OnDestroy {
     return `${h} h ${m.toString().padStart(2, '0')}`;
   }
 
-  clearFilters(): void {
-    this.filters = { ...this.defaultFilters };
+  public clearFilters(): void {
+    this.uiFilters = { ...DEFAULT_UI_FILTERS };
+    this.filters = undefined;
     this.page = 1;
     this.performSearch(true);
   }
 
-  hasActiveFilters(): boolean {
+  public hasActiveFilters(): boolean {
     return (
-      this.filters.electricOnly ||
-      this.filters.ratingMin > 0 ||
-      this.filters.priceMax !== this.defaultFilters.priceMax ||
-      this.filters.durationMax !== this.defaultFilters.durationMax
+      this.uiFilters.electricOnly ||
+      this.uiFilters.ratingMin > 0 ||
+      this.uiFilters.priceMax !== this.defaultFilters.priceMax ||
+      this.uiFilters.durationMax !== this.defaultFilters.durationMax
     );
+  }
+
+  public buildNoResultsMessage(): string {
+    const parts: string[] = [];
+
+    if (this.uiFilters.electricOnly) {
+      parts.push('en véhicules électriques');
+    }
+    if (this.uiFilters.priceMax < this.defaultFilters.priceMax) {
+      parts.push(`avec un prix inférieur à ${this.uiFilters.priceMax} €`);
+    }
+    if (this.uiFilters.durationMax < this.defaultFilters.durationMax) {
+      parts.push(`avec une durée inférieure à ${this.formatDuration(this.uiFilters.durationMax)}`);
+    }
+    if (this.uiFilters.ratingMin > 0) {
+      parts.push(
+        `avec un chauffeur.trice ayant des évaluations supérieures à ${this.uiFilters.ratingMin} étoiles`
+      );
+    }
+
+    if (parts.length === 0) {
+      return 'Malheureusement, aucun covoiturage ne correspond à vos critères de recherche.';
+    }
+
+    let message = 'Malheureusement, aucun trajet ne correspond à votre recherche ';
+    if (parts.length === 1) {
+      message += parts[0] + '.';
+    } else {
+      const lastPart = parts.pop();
+      message += parts.join(', ') + ' et ' + lastPart + '.';
+    }
+
+    return message;
   }
 
   // ─────────────────────────────────────────────
   // PAGINATION
   // ─────────────────────────────────────────────
-  loadRides(): void {
+  public loadRides(): void {
     if (this.noMoreResults || this.isLoading) return;
-    this.performSearch(false);
+
+    this.searchState.nextPage();
+    const state = this.searchState.getState();
+
+    this.searchRideService
+      .searchRides({
+        ...this.lastPayload,
+        page: state.page,
+        limit: this.pageSize,
+        orderBy: this.orderBy,
+        filters: this.filters,
+      })
+      .subscribe({
+        next: (res) => {
+          this.rides.push(
+            ...res.rides.map((r) => ({
+              ...r,
+              showDetails: false,
+              participating: false,
+            }))
+          );
+          this.page++;
+          if (this.rides.length >= this.totalResults) {
+            this.noMoreResults = true;
+          }
+        },
+        error: () => (this.isLoading = false),
+      });
   }
 
   // ─────────────────────────────────────────────
   // UI HELPERS
   // ─────────────────────────────────────────────
-  getStarType(starNumber: number, avgRating: number | null): 'full' | 'half' | 'empty' {
+  public getStarType(starNumber: number, avgRating: number | null): 'full' | 'half' | 'empty' {
     if (avgRating === null) return 'empty';
 
     const diff = avgRating - starNumber + 1;
@@ -219,24 +366,24 @@ export class Results implements OnInit, OnDestroy {
     return 'empty';
   }
 
-  defaultDriverImage = 'assets/user_photo_default.png';
+  private defaultDriverImage = 'assets/user_photo_default.png';
 
-  getDriverImage(ride: any): string {
+  public getDriverImage(ride: any): string {
     return ride?.driver?.photoThumbnail || this.defaultDriverImage;
   }
 
-  onImageError(event: Event) {
+  public onImageError(event: Event) {
     (event.target as HTMLImageElement).src = this.defaultDriverImage;
   }
 
-  toggleDetails(ride: Ride): void {
+  public toggleDetails(ride: Ride): void {
     ride.showDetails = !ride.showDetails;
   }
 
   // ─────────────────────────────────────────────
   // PARTICIPATION
   // ─────────────────────────────────────────────
-  participate(ride: Ride): void {
+  public participate(ride: Ride): void {
     if (!this.auth.isLoggedIn()) {
       this.router.navigate(['/login']);
       return;
@@ -273,7 +420,7 @@ export class Results implements OnInit, OnDestroy {
   // ─────────────────────────────────────────────
   // DESTROY
   // ─────────────────────────────────────────────
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

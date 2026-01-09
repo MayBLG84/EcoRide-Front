@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { ValidationService } from '../../services/validation';
 import { City, CityService } from '../../services/city';
+import { SearchStateService } from '../../services/search-state';
 
 @Component({
   selector: 'app-search-bar',
@@ -31,7 +32,7 @@ export class SearchBar implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
+    private searchState: SearchStateService,
     public validation: ValidationService,
     private cityService: CityService
   ) {
@@ -106,24 +107,19 @@ export class SearchBar implements OnDestroy {
       return;
     }
 
-    // QueryParams
-    const queryParams = {
+    // Store search state centrally
+    this.searchState.setBaseSearch({
       originCity,
       destinyCity,
-      year: date.year,
-      month: date.month,
-      day: date.day,
-    };
+      date: {
+        year: date.year,
+        month: date.month,
+        day: date.day,
+      },
+    });
 
-    // Send search request to backend API
-    if (this.router.url.startsWith('/results')) {
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams,
-      });
-    } else {
-      this.router.navigate(['/results'], { queryParams });
-    }
+    // Navigate to results page
+    this.router.navigate(['/results']);
   }
 
   private clearErrors() {

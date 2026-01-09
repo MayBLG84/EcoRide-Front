@@ -24,6 +24,19 @@ export class SearchRideService {
         .set('date[day]', request.date.day.toString());
     }
     if (request.page) params = params.set('page', request.page.toString());
+    if (request.limit) params = params.set('limit', request.limit.toString());
+
+    if (request.orderBy) {
+      params = params.set('orderBy', request.orderBy);
+    }
+
+    if (request.filters) {
+      Object.entries(request.filters).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== false && value !== 0) {
+          params = params.set(`filters[${key}]`, String(value));
+        }
+      });
+    }
 
     return this.http.get<RideSearchResponse>(this.apiUrl, { params });
   }
