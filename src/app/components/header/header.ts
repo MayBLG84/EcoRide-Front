@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, signal, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 
@@ -20,6 +20,20 @@ export class Header {
   ngOnInit() {
     this.isLoggedIn.set(this.authService.isLoggedIn());
     this.userId.set(this.authService.getUserId());
+    this.closeMenuIfDesktop();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.closeMenuIfDesktop();
+  }
+
+  private closeMenuIfDesktop(): void {
+    const breakpoint = 992;
+
+    if (window.innerWidth > breakpoint && this.menuOpen()) {
+      this.menuOpen.set(false);
+    }
   }
 
   toggleAuth() {

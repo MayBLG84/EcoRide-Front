@@ -13,15 +13,6 @@ import { FormsModule } from '@angular/forms';
 import { SearchStateService } from '../../services/search-state';
 import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
 
-const DEFAULT_UI_FILTERS = {
-  priceMin: 0,
-  priceMax: 250,
-  durationMin: 0,
-  durationMax: 1440,
-  ratingMin: 0,
-  electricOnly: false,
-};
-
 @Component({
   selector: 'app-results',
   imports: [CommonModule, FormsModule, SearchBar, NgxSliderModule],
@@ -31,7 +22,7 @@ const DEFAULT_UI_FILTERS = {
 export class Results implements OnInit, OnDestroy {
   public rides: Ride[] = [];
   private page: number = 1;
-  private pageSize: number = 18;
+  private limit: number = 18;
   public totalResults: number = 0;
   public isLoading: boolean = false;
   private noMoreResults: boolean = false;
@@ -39,53 +30,37 @@ export class Results implements OnInit, OnDestroy {
   public filtersVisible: boolean = false;
   public orderBy?: 'PRICE_ASC' | 'PRICE_DESC' | 'DURATION_ASC' | 'DURATION_DESC';
 
-  public uiFilters = { ...DEFAULT_UI_FILTERS };
+  public filtersMetaGlobal!: FiltersMeta;
 
-  public filters?: RideSearchRequest['filters'];
-
-  public defaultFilters = {
+  public uiFilters = {
     priceMin: 0,
-    priceMax: 250,
+    priceMax: 0,
     durationMin: 0,
-    durationMax: 1440,
+    durationMax: 0,
     ratingMin: 0,
     electricOnly: false,
   };
 
-  public filtersMeta: FiltersMeta = {
-    price: { min: 0, max: 0 },
-    duration: { min: 0, max: 0 },
-    rating: { min: 0, max: 5 },
-  };
-
-  public defaultFiltersMeta: FiltersMeta = {
-    price: { min: 0, max: 250 },
-    duration: { min: 0, max: 1440 },
-    rating: { min: 0, max: 5 },
-  };
+  public filters?: RideSearchRequest['filters'];
 
   public noResultsMessage: string = '';
   private destroy$ = new Subject<void>();
   private lastPayload!: RideSearchRequest;
 
   public priceSliderOptions: Options = {
-    floor: this.filtersMeta.price.min,
-    ceil: this.filtersMeta.price.max,
     draggableRange: true,
     step: 0.5,
     showSelectionBar: true,
     showTicks: false,
-    translate: (value: number): string => '',
+    translate: (value: number) => `${value} €`,
   };
 
   public durationSliderOptions: Options = {
-    floor: this.filtersMeta.duration.min,
-    ceil: this.filtersMeta.duration.max,
     draggableRange: true,
     step: 5,
     showSelectionBar: true,
     showTicks: false,
-    translate: (value: number): string => '',
+    translate: (value: number) => this.formatDuration(value),
   };
 
   constructor(
@@ -110,7 +85,7 @@ export class Results implements OnInit, OnDestroy {
     this.lastPayload = {
       ...state,
       page: 1,
-      limit: this.pageSize,
+      limit: this.limit,
     };
     this.filters = undefined;
     this.orderBy = undefined;
@@ -128,11 +103,19 @@ export class Results implements OnInit, OnDestroy {
         newState.date?.day !== this.lastPayload.date?.day;
 
       if (isNewSearch) {
-        this.lastPayload = { ...newState, page: 1, limit: this.pageSize };
+        this.lastPayload = { ...newState, page: 1, limit: this.limit };
 
         // Reset filters and orderBy
         this.filters = undefined;
         this.orderBy = undefined;
+        this.uiFilters = {
+          priceMin: this.filtersMetaGlobal?.price.min ?? 0,
+          priceMax: this.filtersMetaGlobal?.price.max ?? 0,
+          durationMin: this.filtersMetaGlobal?.duration.min ?? 0,
+          durationMax: this.filtersMetaGlobal?.duration.max ?? 0,
+          ratingMin: 0,
+          electricOnly: false,
+        };
 
         this.performSearch(true);
       }
@@ -161,25 +144,22 @@ export class Results implements OnInit, OnDestroy {
     this.page = 2;
     this.noMoreResults = this.rides.length >= this.totalResults;
 
-    if (res.filtersMeta) {
-      this.filtersMeta = res.filtersMeta;
+    this.filtersMetaGlobal = res.filtersMetaGlobal ?? {
+      electric: false,
+      drivers0: false,
+      price: { min: 0, max: 0 },
+      duration: { min: 0, max: 0 },
+    };
 
-      this.uiFilters.priceMin = res.filtersMeta.price.min;
-      this.uiFilters.priceMax = res.filtersMeta.price.max;
-      this.uiFilters.durationMin = res.filtersMeta.duration.min;
-      this.uiFilters.durationMax = res.filtersMeta.duration.max;
+    const fmGlobal = this.filtersMetaGlobal;
+    const fm = res.filtersMeta ?? {};
 
-      this.priceSliderOptions = {
-        ...this.priceSliderOptions,
-        floor: res.filtersMeta.price.min,
-        ceil: res.filtersMeta.price.max,
-      };
-      this.durationSliderOptions = {
-        ...this.durationSliderOptions,
-        floor: res.filtersMeta.duration.min,
-        ceil: res.filtersMeta.duration.max,
-      };
-    }
+    this.uiFilters.priceMin = fm.price?.min ?? fmGlobal.price.min;
+    this.uiFilters.priceMax = fm.price?.max ?? fmGlobal.price.max;
+    this.uiFilters.durationMin = fm.duration?.min ?? fmGlobal.duration.min;
+    this.uiFilters.durationMax = fm.duration?.max ?? fmGlobal.duration.max;
+
+    this.updateSliderOptions();
   }
 
   private performSearch(reset = true): void {
@@ -191,7 +171,7 @@ export class Results implements OnInit, OnDestroy {
       .searchRides({
         ...this.lastPayload,
         page: this.page,
-        limit: this.pageSize,
+        limit: this.limit,
         orderBy: this.orderBy,
         filters: this.filters,
       })
@@ -236,20 +216,43 @@ export class Results implements OnInit, OnDestroy {
     this.filtersVisible = !this.filtersVisible;
   }
 
+  private updateSliderOptions(): void {
+    this.priceSliderOptions = {
+      ...this.priceSliderOptions,
+      floor: this.filtersMetaGlobal.price.min,
+      ceil: this.filtersMetaGlobal.price.max,
+    };
+
+    this.durationSliderOptions = {
+      ...this.durationSliderOptions,
+      floor: this.filtersMetaGlobal.duration.min,
+      ceil: this.filtersMetaGlobal.duration.max,
+    };
+  }
+
   public applyFilters(): void {
     const f: RideSearchRequest['filters'] = {};
 
     if (this.uiFilters.electricOnly) f.electricOnly = true;
     if (this.uiFilters.ratingMin > 0) f.ratingMin = this.uiFilters.ratingMin;
-    if (this.uiFilters.priceMax < DEFAULT_UI_FILTERS.priceMax) {
+
+    if (this.uiFilters.priceMin > this.filtersMetaGlobal.price.min) {
+      f.priceMin = this.uiFilters.priceMin;
+    }
+
+    if (this.uiFilters.priceMax < this.filtersMetaGlobal.price.max) {
       f.priceMax = this.uiFilters.priceMax;
     }
-    if (this.uiFilters.durationMax < DEFAULT_UI_FILTERS.durationMax) {
+
+    if (this.uiFilters.durationMin > this.filtersMetaGlobal.duration.min) {
+      f.durationMin = this.uiFilters.durationMin;
+    }
+
+    if (this.uiFilters.durationMax < this.filtersMetaGlobal.duration.max) {
       f.durationMax = this.uiFilters.durationMax;
     }
 
     this.filters = Object.keys(f).length ? f : undefined;
-
     this.searchState.setFilters(this.filters);
     this.performSearch(true);
   }
@@ -271,51 +274,66 @@ export class Results implements OnInit, OnDestroy {
   }
 
   public clearFilters(): void {
-    this.uiFilters = { ...DEFAULT_UI_FILTERS };
+    this.uiFilters.priceMin = this.filtersMetaGlobal.price.min;
+    this.uiFilters.priceMax = this.filtersMetaGlobal.price.max;
+    this.uiFilters.durationMin = this.filtersMetaGlobal.duration.min;
+    this.uiFilters.durationMax = this.filtersMetaGlobal.duration.max;
+    this.uiFilters.ratingMin = 0;
+    this.uiFilters.electricOnly = false;
+
     this.filters = undefined;
-    this.page = 1;
     this.performSearch(true);
   }
 
   public hasActiveFilters(): boolean {
+    const fm = this.filtersMetaGlobal ?? {
+      price: { min: 0, max: 0 },
+      duration: { min: 0, max: 0 },
+      electric: false,
+      drivers0: false,
+    };
     return (
       this.uiFilters.electricOnly ||
       this.uiFilters.ratingMin > 0 ||
-      this.uiFilters.priceMax !== this.defaultFilters.priceMax ||
-      this.uiFilters.durationMax !== this.defaultFilters.durationMax
+      this.uiFilters.priceMin > fm.price.min ||
+      this.uiFilters.priceMax < fm.price.max ||
+      this.uiFilters.durationMin > fm.duration.min ||
+      this.uiFilters.durationMax < fm.duration.max
     );
   }
 
   public buildNoResultsMessage(): string {
+    const fm = this.filtersMetaGlobal ?? {
+      price: { min: 0, max: 0 },
+      duration: { min: 0, max: 0 },
+      electric: false,
+      drivers0: false,
+    };
     const parts: string[] = [];
 
-    if (this.uiFilters.electricOnly) {
-      parts.push('en véhicules électriques');
-    }
-    if (this.uiFilters.priceMax < this.defaultFilters.priceMax) {
+    if (this.uiFilters.electricOnly) parts.push('en véhicules électriques');
+    if (this.uiFilters.priceMin > fm.price.min)
+      parts.push(`avec un prix supérieur à ${this.uiFilters.priceMin} €`);
+    if (this.uiFilters.priceMax < fm.price.max)
       parts.push(`avec un prix inférieur à ${this.uiFilters.priceMax} €`);
-    }
-    if (this.uiFilters.durationMax < this.defaultFilters.durationMax) {
+    if (this.uiFilters.durationMin > fm.duration.min)
+      parts.push(`avec une durée supérieure à ${this.formatDuration(this.uiFilters.durationMin)}`);
+    if (this.uiFilters.durationMax < fm.duration.max)
       parts.push(`avec une durée inférieure à ${this.formatDuration(this.uiFilters.durationMax)}`);
-    }
-    if (this.uiFilters.ratingMin > 0) {
+    if (this.uiFilters.ratingMin > 0)
       parts.push(
         `avec un chauffeur.trice ayant des évaluations supérieures à ${this.uiFilters.ratingMin} étoiles`
       );
-    }
 
-    if (parts.length === 0) {
+    if (parts.length === 0)
       return 'Malheureusement, aucun covoiturage ne correspond à vos critères de recherche.';
-    }
 
     let message = 'Malheureusement, aucun trajet ne correspond à votre recherche ';
-    if (parts.length === 1) {
-      message += parts[0] + '.';
-    } else {
+    if (parts.length === 1) message += parts[0] + '.';
+    else {
       const lastPart = parts.pop();
       message += parts.join(', ') + ' et ' + lastPart + '.';
     }
-
     return message;
   }
 
@@ -332,7 +350,7 @@ export class Results implements OnInit, OnDestroy {
       .searchRides({
         ...this.lastPayload,
         page: state.page,
-        limit: this.pageSize,
+        limit: this.limit,
         orderBy: this.orderBy,
         filters: this.filters,
       })

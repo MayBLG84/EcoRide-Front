@@ -27,6 +27,9 @@ export class SearchBar implements OnDestroy {
   originSuggestions: City[] = [];
   destinySuggestions: City[] = [];
 
+  private selectingOrigin = false;
+  private selectingDestiny = false;
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -53,6 +56,7 @@ export class SearchBar implements OnDestroy {
       .valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
+        filter(() => !this.selectingOrigin),
         filter((value) => typeof value === 'string' && value.length >= 3),
         switchMap((value) => this.cityService.searchCities(value)),
         takeUntil(this.destroy$)
@@ -67,6 +71,7 @@ export class SearchBar implements OnDestroy {
       .valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
+        filter(() => !this.selectingDestiny),
         filter((value) => typeof value === 'string' && value.length >= 3),
         switchMap((value) => this.cityService.searchCities(value)),
         takeUntil(this.destroy$)
@@ -77,13 +82,19 @@ export class SearchBar implements OnDestroy {
   }
 
   selectOrigin(city: City): void {
+    this.selectingOrigin = true;
     this.form.patchValue({ originCity: city.nom });
     this.originSuggestions = [];
+
+    setTimeout(() => (this.selectingOrigin = false));
   }
 
   selectDestiny(city: City): void {
+    this.selectingDestiny = true;
     this.form.patchValue({ destinyCity: city.nom });
     this.destinySuggestions = [];
+
+    setTimeout(() => (this.selectingDestiny = false));
   }
 
   onSearch(): void {

@@ -20,15 +20,19 @@ export interface Ride {
 }
 
 export interface FiltersMeta {
+  electric: boolean;
+  drivers0: boolean;
   price: { min: number; max: number };
   duration: { min: number; max: number };
-  rating: { min: number; max: number };
 }
+
+export interface FiltersMetaGlobal extends FiltersMeta {}
 
 export interface RideSearchResponse {
   status: 'EXACT_MATCH' | 'FUTURE_MATCH' | 'NO_MATCH' | 'INVALID_REQUEST';
   rides: Ride[];
-  pagination?: { page: number; pageSize: number; totalResults: number };
-  totalResults?: number;
-  filtersMeta?: FiltersMeta;
+  pagination?: { page: number; limit: number; totalResults: number };
+  totalResults: number;
+  filtersMetaGlobal: FiltersMeta;
+  filtersMeta: FiltersMeta;
 }

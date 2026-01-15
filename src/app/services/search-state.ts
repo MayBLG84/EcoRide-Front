@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 export class SearchStateService {
   private state: SearchState = {
     page: 1,
-    filters: {},
+    filters: undefined,
   };
 
   private state$ = new BehaviorSubject<SearchState>(structuredClone(this.state));
@@ -62,7 +62,7 @@ export class SearchStateService {
   reset() {
     this.state = {
       page: 1,
-      filters: {},
+      filters: undefined,
     };
     this.state$.next(structuredClone(this.state));
   }

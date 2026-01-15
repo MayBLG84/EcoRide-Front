@@ -130,7 +130,7 @@ h5 {
     border: 1px solid #ddd;
     border-radius: 4px;
     white-space: nowrap;
-    height: 30px;
+    height: 40px;
 
     @media (max-width: $breakpointMaxWidth) {
       width: 280px;
@@ -209,7 +209,8 @@ h5 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 4px;
+    padding-top: 12px;
     width: auto;
     max-width: 300px;
 
@@ -218,9 +219,23 @@ h5 {
       flex-shrink: 0;
     }
 
+    .filter-box.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      .form-check-input {
+        cursor: not-allowed;
+      }
+
+      .star-icon {
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+    }
+
     ngx-slider {
       flex: 1;
-      height: 24px;
+      height: 32px;
       position: relative;
       margin: 0 4px;
 
@@ -228,16 +243,16 @@ h5 {
         position: absolute;
         left: 0;
         right: 0;
-        top: 87%;
+        top: 105%;
         transform: translateY(-50%);
         height: 4px;
-        background-color: lighten($primary, 30%);
+        background-color: $secondary;
         border-radius: 2px;
       }
 
       ::ng-deep .ngx-slider-selection {
         position: absolute;
-        top: 87%;
+        top: 105%;
         transform: translateY(-50%);
         height: 4px;
         background-color: $primary;
@@ -246,14 +261,22 @@ h5 {
 
       ::ng-deep .ngx-slider-pointer {
         position: absolute;
-        top: 13%;
+        top: 30%;
         transform: translate(-50%, -50%);
-        width: 18px;
-        height: 18px;
+        width: 15px;
+        height: 15px;
         border: 2px solid $primary;
         background-color: white;
         border-radius: 50%;
         z-index: 2;
+      }
+
+      ::ng-deep .ngx-slider-bubble {
+        bottom: 70%;
+        font-size: 10px;
+        font-weight: 600;
+        color: $primary;
+        margin-bottom: 0;
       }
     }
   }

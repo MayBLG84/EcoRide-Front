@@ -37,13 +37,14 @@
     @if (filtersVisible) {
     <div class="filters-panel">
       <!-- Electric -->
-      <div class="filter-box electric">
+      <div class="filter-box electric" [class.disabled]="!filtersMetaGlobal.electric">
         <div class="form-check form-switch mb-0">
           <input
             class="form-check-input primary-toggle"
             type="checkbox"
             id="electricSwitch"
             [(ngModel)]="uiFilters.electricOnly"
+            [disabled]="!filtersMetaGlobal.electric"
           />
           <label class="form-check-label switch-label" for="electricSwitch"
             >Voiture électrique</label
@@ -54,31 +55,31 @@
       <!-- Price -->
       <div class="filter-box price">
         <span>Prix:</span>
-        <small>{{ uiFilters.priceMin }} €</small>
+        <span>{{ filtersMetaGlobal.price.min }} €</span>
         <ngx-slider
           [(value)]="uiFilters.priceMin"
           [(highValue)]="uiFilters.priceMax"
           [options]="priceSliderOptions"
         ></ngx-slider>
-        <small>{{ uiFilters.priceMax }} €</small>
+        <span>{{ filtersMetaGlobal.price.max }} €</span>
       </div>
 
       <!-- Duration -->
       <div class="filter-box duration">
         <span>Durée:</span>
-        <small>{{ formatDuration(uiFilters.durationMin) }}</small>
+        <span>{{ formatDuration(filtersMetaGlobal.duration.min) }}</span>
         <ngx-slider
           [(value)]="uiFilters.durationMin"
           [(highValue)]="uiFilters.durationMax"
           [options]="durationSliderOptions"
         ></ngx-slider>
-        <small>{{ formatDuration(uiFilters.durationMax) }}</small>
+        <span>{{ formatDuration(filtersMetaGlobal.duration.max) }}</span>
       </div>
 
       <!-- Rating -->
-      <div class="filter-box rating">
+      <div class="filter-box rating" [class.disabled]="!filtersMetaGlobal.drivers0">
         <span class="span-text">Conducteur.trice:</span>
-        @for (s of [1, 2, 3, 4, 5]; track s) {
+        @for (s of [1, 2, 3, 4]; track s) {
         <span class="star-icon" (click)="uiFilters.ratingMin = s">
           <i
             [class.bi-star]="s > uiFilters.ratingMin"
@@ -239,7 +240,7 @@
     }
   </div>
   <!-- Show More Button -->
-  @if (rides.length < totalResults) {
+  @if (rides.length < totalResults && status === 'EXACT_MATCH') {
   <div class="show-more-container">
     <button class="btn btn-show-more" (click)="loadRides()" [disabled]="isLoading">
       {{ isLoading ? 'Chargement...' : 'Voir plus de résultats' }}
