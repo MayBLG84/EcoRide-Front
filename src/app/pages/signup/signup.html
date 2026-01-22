@@ -1,1 +1,301 @@
-<p>signup works!</p>
+<app-big-title bigTitle="Enregistrez-vous !"></app-big-title>
+<section class="headline-container">
+  <h2>Votre trajet commence ici</h2>
+  <h5><em>Ensemble sur la voie verte</em></h5>
+</section>
+@if (responseReceived) {
+  <section class="status-response-container">
+    <div class="status-response">
+      @if (successMessage) {
+        <div class="status-message">
+          <h2>Nous sommes ravis de vous compter parmi nous, {{ form.value.firstName }} !</h2>
+        </div>
+        <div class="field-messages">
+          <p>Connectez-vous dès maintenant pour profiter de nos services :</p>
+          <a routerLink="/login">Se connecter</a>
+        </div>
+      }
+      @if (invalidUsageType) {
+        <div class="status-message">
+          <h2>Oups... quelque chose s'est mal passé</h2>
+        </div>
+        <div class="field-messages">
+          <p>Veuillez réessayer un peu plus tard.</p>
+        </div>
+      }
+      @if (userAlreadyExists) {
+        <div class="status-message">
+          <h2>Vous possédez déjà un compte chez nous.</h2>
+        </div>
+        <div class="field-messages">
+          <p>Connectez-vous pour accéder à nos services :</p>
+          <a routerLink="/login">Se connecter</a>
+          <p>ou</p>
+          <p>Récupérez votre mot de passe si vous l'avez oublié.</p>
+          <a routerLink="/forgot-password">Récupérer le mot de passe</a>
+        </div>
+      }
+      @if (nicknameAlreadyExists) {
+        <div class="status-message">
+          <h2>Désolé, ce pseudo est déjà utilisé.</h2>
+        </div>
+        <div class="field-messages">
+          <p>Veuillez choisir un autre pseudo pour continuer.</p>
+        </div>
+      }
+      @if (backendFormError) {
+        <div class="status-message">
+          <h2>On a trouvé un petit souci dans votre formulaire</h2>
+        </div>
+        <div class="field-messages">
+          <p>
+            <strong>{{ backendFormError.label }}</strong>
+            {{ backendFormError.rules ? ' ' + backendFormError.rules : '' }}
+          </p>
+        </div>
+      }
+      @if (serverError) {
+        <div class="status-message">
+          <h2>Oups… quelque chose s'est mal passé</h2>
+        </div>
+        <div class="field-messages">
+          <p>Une erreur technique est survenue.</p>
+          <p>Veuillez réessayer un peu plus tard.</p>
+        </div>
+      }
+    </div>
+  </section>
+}
+<section class="signup-container">
+  <form [formGroup]="form" (ngSubmit)="onSigningUp()">
+    <!-- Usage Type => roles -->
+    <fieldset class="form-fieldset">
+      <div class="form-header">
+        <legend class="field-usage">Je souhaite m'enregistrer en tant que...</legend>
+        <span class="field-info required">(champ obligatoire)</span>
+      </div>
+
+      <div class="radio-group">
+        <div>
+          <input id="usage-passager" type="radio" formControlName="usageType" value="PASSENGER" />
+          <label for="usage-passager">Passager.e</label>
+        </div>
+        <div>
+          <input id="usage-driver" type="radio" formControlName="usageType" value="DRIVER" />
+          <label for="usage-driver">Chauffeur.euse</label>
+        </div>
+        <div>
+          <input id="usage-both" type="radio" formControlName="usageType" value="BOTH" />
+          <label for="usage-both">Les deux</label>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- First Name -->
+    <div class="form-field">
+      <label for="firstName"
+        >Prénom<span class="field-info required">(champ obligatoire)</span></label
+      >
+      <input id="firstName" type="text" formControlName="firstName" />
+      @if (showError('firstName')) {
+        <small class="error">{{ errorFirstName }}</small>
+      }
+    </div>
+
+    <!-- Last Name -->
+    <div class="form-field">
+      <label for="lastName">Nom<span class="field-info required">(champ obligatoire)</span></label>
+      <input id="lastName" type="text" formControlName="lastName" />
+      @if (showError('lastName')) {
+        <small class="error">{{ errorLastName }}</small>
+      }
+    </div>
+
+    <!-- Nickname -->
+    <div class="form-field">
+      <label for="nickname"
+        >Pseudo<span class="field-info required">(champ obligatoire)</span></label
+      >
+      <input id="nickname" type="text" formControlName="nickname" />
+      @if (showError('nickname')) {
+        <small class="error">{{ nicknameExists ? nicknameCheckMessage : errorNickname }}</small>
+      }
+    </div>
+
+    <!-- Birthday -->
+    <div class="form-field">
+      <label for="birthday"
+        >Anniversaire<span class="field-info required">(champ obligatoire)</span></label
+      >
+      <input
+        class="form-control"
+        id="birthday"
+        placeholder="aaaa-mm-jj"
+        formControlName="date"
+        ngbDatepicker
+        #d="ngbDatepicker"
+        [readonly]="true"
+        (click)="d.toggle()"
+        [autoClose]="true"
+        [container]="'body'"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
+      />
+      @if (showError('date')) {
+        <small class="error">{{ errorDate }}</small>
+      }
+    </div>
+
+    <!-- Telephone -->
+    <div class="form-field">
+      <label for="telephone"
+        >Téléphone<span class="field-info required">(champ obligatoire)</span></label
+      >
+      <input id="telephone" type="tel" formControlName="telephone" placeholder="07654321" />
+      @if (showError('telephone')) {
+        <small class="error">{{ errorTelephone }}</small>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="form-field">
+      <label for="email"
+        >Adresse e-mail<span class="field-info required">(champ obligatoire)</span></label
+      >
+      <input id="email" type="email" formControlName="email" placeholder="example@mail.fr" />
+      @if (showError('email')) {
+        <small class="error">{{ errorEmail }}</small>
+      }
+    </div>
+
+    <!-- Password -->
+    <div class="form-field password-field">
+      <label for="password"
+        >Mot de passe<span class="field-info required">(champ obligatoire)</span></label
+      >
+
+      <div class="password-wrapper">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          id="password"
+          formControlName="password"
+        />
+
+        <button
+          type="button"
+          class="toggle-password"
+          (click)="togglePassword()"
+          aria-label="Afficher le mot de passe"
+        >
+          <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+        </button>
+      </div>
+
+      @if (showError('password')) {
+        <small class="error">{{ errorPassword }}</small>
+      }
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="form-field password-field">
+      <label for="confirmPassword"
+        >Confirmez votre mot-de-passe<span class="field-info required"
+          >(champ obligatoire)</span
+        ></label
+      >
+
+      <div class="password-wrapper">
+        <input
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+        />
+
+        <button
+          type="button"
+          class="toggle-password"
+          (click)="toggleConfirmPassword()"
+          aria-label="Afficher le mot de passe"
+        >
+          <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+        </button>
+      </div>
+
+      @if (showError('confirmPassword')) {
+        <small class="error">{{ errorConfirmPassword }}</small>
+      }
+    </div>
+
+    <!-- Address -->
+    <div class="form-field" formGroupName="address">
+      <div class="address-field">
+        <p>Adresse<span class="field-info optional">(optionnel)</span></p>
+        <div class="form-field">
+          <label for="street">Rue</label>
+          <input id="street" type="text" formControlName="street" />
+        </div>
+        <div class="form-field">
+          <label for="number">Numéro</label>
+          <input id="number" type="text" formControlName="number" />
+        </div>
+        <div class="form-field">
+          <label for="complement">Complément</label>
+          <input id="complement" type="text" formControlName="complement" />
+        </div>
+        <div class="form-field">
+          <label for="city">Ville/Village</label>
+          <input id="city" type="text" formControlName="city" />
+        </div>
+        <div class="form-field">
+          <label for="zipcode">Code postal</label>
+          <input id="zipcode" type="text" formControlName="zipcode" />
+        </div>
+        <div class="form-field">
+          <label for="country">Pays</label>
+          <input id="country" type="text" formControlName="country" />
+        </div>
+      </div>
+      @if (showError('addressUnsafeText')) {
+        <small class="error">Certains caractères ne sont pas autorisés dans l'adresse.</small>
+      }
+    </div>
+
+    <!-- Profile Picture -->
+    <div class="form-field profile-picture-container">
+      <p>Photo de profil<span class="field-info optional">(optionnel)</span></p>
+
+      <!-- Real input -->
+      <input id="photo" type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+
+      <!-- Custom btn + filename + remove -->
+      <div class="profile-picker">
+        <label for="photo" class="btn profile-picture-btn"> Choisir une photo </label>
+
+        <!-- File name + remove -->
+        @if (form.value.profilePicture) {
+          <div class="file-info">
+            <span class="file-name">{{ form.value.profilePicture.name }}</span>
+            <i class="bi bi-x-circle remove-file" (click)="removeFile()"></i>
+          </div>
+        }
+      </div>
+
+      <!-- Preview -->
+      @if (previewUrl) {
+        <div class="preview-wrapper">
+          <img [src]="previewUrl" alt="Aperçu de la photo" class="profile-preview" />
+        </div>
+      }
+
+      <!-- Error -->
+      @if (showError('profilePicture')) {
+        <small class="error">{{ errorProfilePicture }}</small>
+      }
+    </div>
+
+    <!-- Submit -->
+    <div class="form-field-btn">
+      <button class="btn register-btn" type="submit" [disabled]="form.invalid">Enregistrer</button>
+    </div>
+  </form>
+</section>

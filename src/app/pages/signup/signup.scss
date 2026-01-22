@@ -1,0 +1,330 @@
+@use 'variables' as *;
+
+/* =========================
+   Headline
+========================= */
+.headline-container {
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.headline-container h2 {
+  font-family: $font-headline;
+  color: $primary;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+.headline-container h5 {
+  font-family: $font-content;
+  color: $secondary;
+}
+
+/* =========================
+   Messages
+========================= */
+.status-response-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .status-response {
+    width: 880px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    background-color: $tertiary;
+    width: 880px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-family: $font-content;
+    color: $bg-dark;
+    padding: 10px 20px;
+    font-weight: 500;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+
+    a {
+      font-size: 1rem;
+      margin-bottom: 0;
+      font-weight: 600;
+      color: $primary;
+    }
+
+    @media (max-width: $breakpointMaxWidth) {
+      width: 280px;
+    }
+  }
+}
+
+/* =========================
+   Signup container
+========================= */
+.signup-container {
+  width: 880px;
+  padding: 20px 10px;
+  border: 3px solid $bg-dark;
+  border-radius: 10px;
+  background-color: transparent;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  font-family: $font-content;
+  font-size: 1rem;
+  font-weight: 600;
+  color: $primary;
+
+  @media (max-width: $breakpointMaxWidth) {
+    width: 280px;
+  }
+
+  form {
+    width: 100%;
+  }
+}
+
+/* =========================
+   Form fields
+========================= */
+.form-fieldset {
+  .form-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+
+    legend {
+      font-size: 1.25rem;
+      display: flex;
+      margin-bottom: 0.15rem;
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+      color: $primary;
+    }
+
+    .field-info.required {
+      color: $attention;
+      margin-bottom: 12px;
+      font-size: 0.65rem;
+      font-weight: normal;
+      white-space: nowrap;
+    }
+  }
+
+  .radio-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    label {
+      font-size: 1rem;
+      color: $attention;
+      font-weight: 400;
+    }
+
+    @media (max-width: $breakpointMaxWidth) {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 25px;
+
+      div {
+        margin-bottom: -25px;
+      }
+    }
+  }
+
+  input[type='radio'] {
+    accent-color: $primary;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+
+  label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-weight: 600;
+
+    .field-info {
+      font-size: 0.65rem;
+      font-weight: normal;
+    }
+
+    .field-info.required {
+      color: $attention;
+      margin-left: 6px;
+    }
+
+    .field-info.optional {
+      color: green;
+      margin-left: 6px;
+    }
+  }
+
+  input {
+    font-size: 16px;
+    padding: 6px 10px;
+    border: 1px solid $primary;
+    border-radius: 4px;
+    background-color: rgba($primary, 0.1);
+    color: $primary;
+    margin-bottom: -0.25rem;
+  }
+
+  small.error {
+    margin-top: 2px;
+    font-size: 0.65rem;
+    line-height: 1.1;
+    color: $attention;
+    text-align: left;
+  }
+
+  p {
+    margin-bottom: 0;
+
+    .field-info {
+      font-size: 0.65rem;
+      font-weight: normal;
+    }
+
+    .field-info.optional {
+      color: green;
+      margin-left: 6px;
+    }
+  }
+}
+
+/* =========================
+   Password field
+========================= */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 100%;
+    padding-right: 2.5rem;
+  }
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: $bg-dark;
+
+  &:hover {
+    color: $primary;
+    transform: scale(1.05);
+  }
+}
+
+/* =========================
+   Buttons
+========================= */
+.form-field-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 0.5rem;
+}
+
+.btn {
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: none;
+  font-family: $font-content;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.profile-picture-btn {
+  background-color: $bg-dark;
+  color: white;
+  margin-top: 6px;
+}
+
+.register-btn {
+  background-color: $tertiary;
+  color: $primary;
+  align-self: center;
+}
+
+/* =========================
+   Preview image
+========================= */
+.profile-picture-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+
+  .profile-picker {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.85rem;
+      color: $primary;
+
+      .remove-file {
+        cursor: pointer;
+        color: $attention;
+        font-size: 1rem;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+
+  .preview-wrapper {
+    margin-top: 0.5rem;
+
+    .profile-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid $light;
+    }
+  }
+}
