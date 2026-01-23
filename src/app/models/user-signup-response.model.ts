@@ -10,7 +10,8 @@ export interface UserSignupResponse {
     | 'INVALID_TELEPHONE'
     | 'INVALID_PASSWORD'
     | 'INVALID_BIRTHDAY'
-    | 'INVALID_USAGE_TYPE';
+    | 'INVALID_USAGE_TYPE'
+    | 'UNDERAGE';
   id: number;
   firstName: string;
   lastName: string;

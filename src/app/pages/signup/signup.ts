@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbDatepicker, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { BigTitle } from '../../components/big-title/big-title';
 import { ValidationService } from '../../services/validation';
@@ -30,6 +30,8 @@ export class Signup implements OnDestroy {
   errorLastName = 'Certains caractères ne sont pas autorisés';
   errorNickname = 'Certains caractères ne sont pas autorisés';
   errorDate = 'Date invalide';
+  errorUnderAge =
+    'Nous sommes désolés, nos services sont actuellement proposés uniquement aux personnes majeures.';
   errorTelephone = 'Numéro de téléphone invalide';
   errorEmail = 'Adresse e-mail invalide';
   errorPassword =
@@ -112,6 +114,10 @@ export class Signup implements OnDestroy {
       label: 'Votre date de naissance',
       rules: "doit être sélectionnée à l'aide du calendrier et correspondre à une date valide",
     },
+    UNDERAGE: {
+      label: 'Âge requis',
+      rules: 'vous devez avoir au moins 18 ans pour utiliser nos services',
+    },
 
     // ignored
     INVALID_USAGE_TYPE: { label: '' },
@@ -135,7 +141,7 @@ export class Signup implements OnDestroy {
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         nickname: ['', Validators.required],
-        date: ['', Validators.required],
+        date: ['', [Validators.required, this.validation.minimumAgeValidator(18)]],
         telephone: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         password: ['', Validators.required],
@@ -202,23 +208,25 @@ export class Signup implements OnDestroy {
       .valueChanges.pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap((nick) => this.userCreateService.checkNicknameExists(nick)),
+        switchMap((nick) => {
+          return nick ? this.userCreateService.checkNicknameExists(nick) : of(false);
+        }),
       )
       .subscribe((exists) => {
-        this.nicknameExists = exists;
-
         const control = this.form.get('nickname');
-        if (control) {
-          if (exists) {
-            control.setErrors({ nicknameTaken: true });
-          } else {
-            const errors = control.errors;
-            if (errors) {
-              delete errors['nicknameTaken'];
-              if (Object.keys(errors).length === 0) control.setErrors(null);
-            }
-          }
+        if (!control) return;
+
+        const errors = control.errors || {};
+
+        if (exists) {
+          errors['nicknameTaken'] = true;
+        } else {
+          delete errors['nicknameTaken'];
         }
+
+        control.setErrors(Object.keys(errors).length ? errors : null);
+
+        this.nicknameExists = exists && !!control.value?.trim();
       });
   }
 
@@ -408,7 +416,10 @@ export class Signup implements OnDestroy {
       case 'nickname':
         return control.touched && !this.validation.isValidNickname(control.value);
       case 'date':
-        return control.touched && !this.validation.isValidDate(control.value);
+        return (
+          (control.touched || control.dirty) &&
+          (!this.validation.isValidDate(control.value) || control.hasError('underAge'))
+        );
       case 'telephone':
         return control.touched && !this.validation.isValidTelephone(control.value);
       case 'email':

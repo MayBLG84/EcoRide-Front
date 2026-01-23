@@ -69,6 +69,33 @@ export class ValidationService {
     return jsDate instanceof Date && !isNaN(jsDate.getTime());
   }
 
+  /** Validate age (18+) */
+  isAtLeastAge(date: NgbDateStruct | null | undefined, minAge: number): boolean {
+    if (!date) return false;
+
+    const birthDate = this.toJsDate(date);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    return age >= minAge;
+  }
+
+  minimumAgeValidator(minAge: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value as NgbDateStruct | null;
+
+      if (!value) return null;
+
+      return this.isAtLeastAge(value, minAge) ? null : { underAge: true };
+    };
+  }
+
   addressIfOneThenAllValidator(): ValidatorFn {
     return (group: AbstractControl): { [key: string]: any } | null => {
       const street = group.get('street')?.value;

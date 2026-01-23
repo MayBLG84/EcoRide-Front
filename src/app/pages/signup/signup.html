@@ -117,8 +117,11 @@
         >Pseudo<span class="field-info required">(champ obligatoire)</span></label
       >
       <input id="nickname" type="text" formControlName="nickname" />
-      @if (showError('nickname')) {
-        <small class="error">{{ nicknameExists ? nicknameCheckMessage : errorNickname }}</small>
+      @if (showError('nickname') && !nicknameExists) {
+        <small class="error">{{ errorNickname }}</small>
+      }
+      @if (nicknameExists) {
+        <small class="error">{{ nicknameCheckMessage }}</small>
       }
     </div>
 
@@ -136,13 +139,16 @@
         #d="ngbDatepicker"
         [readonly]="true"
         (click)="d.toggle()"
+        (dateSelect)="form.get('date')?.markAsTouched()"
         [autoClose]="true"
         [container]="'body'"
         [minDate]="minDate"
         [maxDate]="maxDate"
       />
       @if (showError('date')) {
-        <small class="error">{{ errorDate }}</small>
+        <small class="error">{{
+          form.get('date')?.hasError('underAge') ? errorUnderAge : errorDate
+        }}</small>
       }
     </div>
 
