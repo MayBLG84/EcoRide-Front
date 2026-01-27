@@ -68,7 +68,7 @@ export class Results implements OnInit, OnDestroy {
     private searchState: SearchStateService,
     private rideParticipation: RideParticipation,
     public auth: Auth,
-    private router: Router
+    private router: Router,
   ) {}
 
   // ─────────────────────────────────────────────
@@ -185,7 +185,7 @@ export class Results implements OnInit, OnDestroy {
                 ...r,
                 showDetails: false,
                 participating: false,
-              }))
+              })),
             );
             this.page++;
             if (this.rides.length >= this.totalResults) this.noMoreResults = true;
@@ -322,7 +322,7 @@ export class Results implements OnInit, OnDestroy {
       parts.push(`avec une durée inférieure à ${this.formatDuration(this.uiFilters.durationMax)}`);
     if (this.uiFilters.ratingMin > 0)
       parts.push(
-        `avec un chauffeur.trice ayant des évaluations supérieures à ${this.uiFilters.ratingMin} étoiles`
+        `avec un chauffeur.trice ayant des évaluations supérieures à ${this.uiFilters.ratingMin} étoiles`,
       );
 
     if (parts.length === 0)
@@ -361,7 +361,7 @@ export class Results implements OnInit, OnDestroy {
               ...r,
               showDetails: false,
               participating: false,
-            }))
+            })),
           );
           this.page++;
           if (this.rides.length >= this.totalResults) {

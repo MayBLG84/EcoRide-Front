@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="EcoRide Frontend Tests" tests="114" failures="0" errors="0" time="10.544">
+  <testsuite name="src/app/services/search-state.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:34" time="1.74" tests="7">
+    <testcase classname="SearchStateService (Jest)-should be created" name="SearchStateService (Jest)-should be created" time="0.085">
+    </testcase>
+    <testcase classname="SearchStateService (Jest)-should return initial state" name="SearchStateService (Jest)-should return initial state" time="0.015">
+    </testcase>
+    <testcase classname="SearchStateService (Jest)-should update base search" name="SearchStateService (Jest)-should update base search" time="0.015">
+    </testcase>
+    <testcase classname="SearchStateService (Jest)-should set filters and reset page to 1" name="SearchStateService (Jest)-should set filters and reset page to 1" time="0.017">
+    </testcase>
+    <testcase classname="SearchStateService (Jest)-should set order and reset page to 1" name="SearchStateService (Jest)-should set order and reset page to 1" time="0.01">
+    </testcase>
+    <testcase classname="SearchStateService (Jest)-should increment page" name="SearchStateService (Jest)-should increment page" time="0.009">
+    </testcase>
+    <testcase classname="SearchStateService (Jest)-should reset state" name="SearchStateService (Jest)-should reset state" time="0.009">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/services/validation.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:34" time="2.318" tests="24">
+    <testcase classname="ValidationService (Jest)-should be created" name="ValidationService (Jest)-should be created" time="0.016">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; City validation-should validate valid city names" name="ValidationService (Jest) &gt; City validation-should validate valid city names" time="0.005">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; City validation-should invalidate invalid city names" name="ValidationService (Jest) &gt; City validation-should invalidate invalid city names" time="0.005">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Name validation-should validate valid names" name="ValidationService (Jest) &gt; Name validation-should validate valid names" time="0.016">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Name validation-should invalidate invalid names" name="ValidationService (Jest) &gt; Name validation-should invalidate invalid names" time="0.007">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Nickname validation-should validate valid nicknames" name="ValidationService (Jest) &gt; Nickname validation-should validate valid nicknames" time="0.014">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Nickname validation-should invalidate invalid nicknames" name="ValidationService (Jest) &gt; Nickname validation-should invalidate invalid nicknames" time="0.009">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Password validation-should validate strong passwords" name="ValidationService (Jest) &gt; Password validation-should validate strong passwords" time="0.005">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Password validation-should invalidate weak passwords" name="ValidationService (Jest) &gt; Password validation-should invalidate weak passwords" time="0.007">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Password match validator-should return null if passwords match" name="ValidationService (Jest) &gt; Password match validator-should return null if passwords match" time="0.01">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Password match validator-should return error if passwords do not match" name="ValidationService (Jest) &gt; Password match validator-should return error if passwords do not match" time="0.008">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Telephone validation-should validate valid telephone numbers" name="ValidationService (Jest) &gt; Telephone validation-should validate valid telephone numbers" time="0.001">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Telephone validation-should invalidate invalid telephone numbers" name="ValidationService (Jest) &gt; Telephone validation-should invalidate invalid telephone numbers" time="0.005">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Date validation-should validate proper NgbDateStruct" name="ValidationService (Jest) &gt; Date validation-should validate proper NgbDateStruct" time="0.004">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Date validation-should invalidate improper dates" name="ValidationService (Jest) &gt; Date validation-should invalidate improper dates" time="0.01">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Age validation-should validate minimum age" name="ValidationService (Jest) &gt; Age validation-should validate minimum age" time="0.003">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Minimum age validator-should return null if age is sufficient" name="ValidationService (Jest) &gt; Minimum age validator-should return null if age is sufficient" time="0.003">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Minimum age validator-should return error if age is insufficient" name="ValidationService (Jest) &gt; Minimum age validator-should return error if age is insufficient" time="0.002">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Address validator-should return error if some address fields are filled but not all" name="ValidationService (Jest) &gt; Address validator-should return error if some address fields are filled but not all" time="0.005">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Address validator-should return null if all or none are filled" name="ValidationService (Jest) &gt; Address validator-should return null if all or none are filled" time="0.003">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Profile picture validation-should validate correct files" name="ValidationService (Jest) &gt; Profile picture validation-should validate correct files" time="0.025">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Profile picture validation-should invalidate wrong types, size or name" name="ValidationService (Jest) &gt; Profile picture validation-should invalidate wrong types, size or name" time="0.016">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Non-empty validation-should detect non-empty values" name="ValidationService (Jest) &gt; Non-empty validation-should detect non-empty values" time="0.01">
+    </testcase>
+    <testcase classname="ValidationService (Jest) &gt; Safe text validation-should detect safe text" name="ValidationService (Jest) &gt; Safe text validation-should detect safe text" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/services/search-ride.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:36" time="1.35" tests="3">
+    <testcase classname="SearchRideService-should be created" name="SearchRideService-should be created" time="0.018">
+    </testcase>
+    <testcase classname="SearchRideService-should call API with correct params and return rides" name="SearchRideService-should call API with correct params and return rides" time="0.016">
+    </testcase>
+    <testcase classname="SearchRideService-should handle empty response" name="SearchRideService-should handle empty response" time="0.012">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/components/header/header.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:34" time="3.553" tests="7">
+    <testcase classname="Header-should create the component" name="Header-should create the component" time="0.502">
+    </testcase>
+    <testcase classname="Header-should show logo and brand" name="Header-should show logo and brand" time="0.175">
+    </testcase>
+    <testcase classname="Header-should logout and navigate to home on deconnexion click" name="Header-should logout and navigate to home on deconnexion click" time="0.62">
+    </testcase>
+    <testcase classname="Header-should toggle mobile menu when burger is clicked" name="Header-should toggle mobile menu when burger is clicked" time="0.095">
+    </testcase>
+    <testcase classname="Header-should close menu when closeMenu() is called" name="Header-should close menu when closeMenu() is called" time="0.065">
+    </testcase>
+    <testcase classname="Header-should show the correct links when user is logged in" name="Header-should show the correct links when user is logged in" time="0.053">
+    </testcase>
+    <testcase classname="Header-should show the correct links when user is logged out" name="Header-should show the correct links when user is logged out" time="0.088">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/home/home.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:34" time="4.278" tests="6">
+    <testcase classname="Home-should create the component" name="Home-should create the component" time="0.313">
+    </testcase>
+    <testcase classname="Home-should render the search bar component" name="Home-should render the search bar component" time="0.182">
+    </testcase>
+    <testcase classname="Home-should render the headline section with correct titles" name="Home-should render the headline section with correct titles" time="0.103">
+    </testcase>
+    <testcase classname="Home-should render three cards with correct classes" name="Home-should render three cards with correct classes" time="0.103">
+    </testcase>
+    <testcase classname="Home-should have images and icons in each card" name="Home-should have images and icons in each card" time="0.098">
+    </testcase>
+    <testcase classname="Home-should have content paragraphs inside each card" name="Home-should have content paragraphs inside each card" time="0.121">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/app.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:37" time="2.01" tests="4">
+    <testcase classname="App Component-should create the component" name="App Component-should create the component" time="0.521">
+    </testcase>
+    <testcase classname="App Component-should render header, router-outlet, and footer" name="App Component-should render header, router-outlet, and footer" time="0.13">
+    </testcase>
+    <testcase classname="App Component-should provide LOCALE_ID as fr-FR" name="App Component-should provide LOCALE_ID as fr-FR" time="0.012">
+    </testcase>
+    <testcase classname="App Component-should initialize the title signal correctly" name="App Component-should initialize the title signal correctly" time="0.047">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/components/search-bar/search-bar.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:34" time="4.65" tests="10">
+    <testcase classname="SearchBar-should create the component" name="SearchBar-should create the component" time="0.384">
+    </testcase>
+    <testcase classname="SearchBar-should render form" name="SearchBar-should render form" time="0.086">
+    </testcase>
+    <testcase classname="SearchBar-should render input icons" name="SearchBar-should render input icons" time="0.099">
+    </testcase>
+    <testcase classname="SearchBar-should render button Recherche" name="SearchBar-should render button Recherche" time="0.08">
+    </testcase>
+    <testcase classname="SearchBar-should navigate to results page on valid submit" name="SearchBar-should navigate to results page on valid submit" time="0.122">
+    </testcase>
+    <testcase classname="SearchBar-should show errors if all inputs are invalid" name="SearchBar-should show errors if all inputs are invalid" time="0.059">
+    </testcase>
+    <testcase classname="SearchBar-should show error if originCity is empty" name="SearchBar-should show error if originCity is empty" time="0.099">
+    </testcase>
+    <testcase classname="SearchBar-should show error if destinyCity is empty" name="SearchBar-should show error if destinyCity is empty" time="0.09">
+    </testcase>
+    <testcase classname="SearchBar-should show error if date is empty" name="SearchBar-should show error if date is empty" time="0.099">
+    </testcase>
+    <testcase classname="SearchBar-should not navigate if inputs are invalid" name="SearchBar-should not navigate if inputs are invalid" time="0.065">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/components/footer/footer.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:37" time="1.825" tests="5">
+    <testcase classname="FooterComponent-should create" name="FooterComponent-should create" time="0.208">
+    </testcase>
+    <testcase classname="FooterComponent-should render contact and legal links" name="FooterComponent-should render contact and legal links" time="0.051">
+    </testcase>
+    <testcase classname="FooterComponent-should render footer text" name="FooterComponent-should render footer text" time="0.029">
+    </testcase>
+    <testcase classname="FooterComponent-should navigate to contact page on link click" name="FooterComponent-should navigate to contact page on link click" time="0.133">
+    </testcase>
+    <testcase classname="FooterComponent-should navigate to legal mentions page on link click" name="FooterComponent-should navigate to legal mentions page on link click" time="0.046">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/components/big-title/big-title.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:38" time="1.596" tests="3">
+    <testcase classname="BigTitle-should create the component" name="BigTitle-should create the component" time="0.27">
+    </testcase>
+    <testcase classname="BigTitle-should render the title passed via @Input" name="BigTitle-should render the title passed via @Input" time="0.044">
+    </testcase>
+    <testcase classname="BigTitle-should have the correct CSS class applied" name="BigTitle-should have the correct CSS class applied" time="0.037">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/services/user-create.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:39" time="1.325" tests="4">
+    <testcase classname="UserCreateService (Jest)-should be created" name="UserCreateService (Jest)-should be created" time="0.037">
+    </testcase>
+    <testcase classname="UserCreateService (Jest) &gt; create-should post FormData and return UserSignupResponse" name="UserCreateService (Jest) &gt; create-should post FormData and return UserSignupResponse" time="0.031">
+    </testcase>
+    <testcase classname="UserCreateService (Jest) &gt; checkNicknameExists-should return true if nickname exists" name="UserCreateService (Jest) &gt; checkNicknameExists-should return true if nickname exists" time="0.005">
+    </testcase>
+    <testcase classname="UserCreateService (Jest) &gt; checkNicknameExists-should return false if nickname does not exist" name="UserCreateService (Jest) &gt; checkNicknameExists-should return false if nickname does not exist" time="0.005">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/services/auth.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:38" time="1.605" tests="6">
+    <testcase classname="Auth Service-should be created" name="Auth Service-should be created" time="0.058">
+    </testcase>
+    <testcase classname="Auth Service-should initialize signals based on localStorage" name="Auth Service-should initialize signals based on localStorage" time="0.038">
+    </testcase>
+    <testcase classname="Auth Service-should login correctly" name="Auth Service-should login correctly" time="0.014">
+    </testcase>
+    <testcase classname="Auth Service-should logout correctly" name="Auth Service-should logout correctly" time="0.014">
+    </testcase>
+    <testcase classname="Auth Service-should return userId correctly" name="Auth Service-should return userId correctly" time="0.014">
+    </testcase>
+    <testcase classname="Auth Service-should return isLoggedIn correctly" name="Auth Service-should return isLoggedIn correctly" time="0.025">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/errors/server-error/server-error.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:39" time="1.346" tests="1">
+    <testcase classname="ServerError-should create" name="ServerError-should create" time="0.162">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/signup/signup.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:34" time="5.957" tests="12">
+    <testcase classname="Signup Component-should create the component" name="Signup Component-should create the component" time="0.945">
+    </testcase>
+    <testcase classname="Signup Component-should render headline" name="Signup Component-should render headline" time="0.157">
+    </testcase>
+    <testcase classname="Signup Component-should invalidate the form if required fields are empty" name="Signup Component-should invalidate the form if required fields are empty" time="0.134">
+    </testcase>
+    <testcase classname="Signup Component-should validate the form with valid inputs" name="Signup Component-should validate the form with valid inputs" time="0.163">
+    </testcase>
+    <testcase classname="Signup Component-should call userCreateService.create on valid form submit" name="Signup Component-should call userCreateService.create on valid form submit" time="0.176">
+    </testcase>
+    <testcase classname="Signup Component-should handle backend errors" name="Signup Component-should handle backend errors" time="0.158">
+    </testcase>
+    <testcase classname="Signup Component-should handle server errors" name="Signup Component-should handle server errors" time="0.119">
+    </testcase>
+    <testcase classname="Signup Component-should mark nicknameTaken error if nickname exists" name="Signup Component-should mark nicknameTaken error if nickname exists" time="0.162">
+    </testcase>
+    <testcase classname="Signup Component-should update previewUrl on valid file selection" name="Signup Component-should update previewUrl on valid file selection" time="0.111">
+    </testcase>
+    <testcase classname="Signup Component-should remove selected file" name="Signup Component-should remove selected file" time="0.141">
+    </testcase>
+    <testcase classname="Signup Component-should toggle showPassword" name="Signup Component-should toggle showPassword" time="0.132">
+    </testcase>
+    <testcase classname="Signup Component-should toggle showConfirmPassword" name="Signup Component-should toggle showConfirmPassword" time="0.103">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/services/city.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:39" time="1.436" tests="3">
+    <testcase classname="CityService-should be created" name="CityService-should be created" time="0.044">
+    </testcase>
+    <testcase classname="CityService-should call API with correct query and return cities" name="CityService-should call API with correct query and return cities" time="0.022">
+    </testcase>
+    <testcase classname="CityService-should return empty array if no cities found" name="CityService-should return empty array if no cities found" time="0.019">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/errors/unauthorized/unauthorized.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:39" time="1.42" tests="1">
+    <testcase classname="Unauthorized-should create" name="Unauthorized-should create" time="0.166">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/results/results.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:34" time="6.865" tests="13">
+    <testcase classname="Results Component-should render search-bar and headline" name="Results Component-should render search-bar and headline" time="0.736">
+    </testcase>
+    <testcase classname="Results Component-EXACT_MATCH without filters → show filters and cards" name="Results Component-EXACT_MATCH without filters → show filters and cards" time="0.427">
+    </testcase>
+    <testcase classname="Results Component-FUTURE_MATCH without filters → show future message and cards" name="Results Component-FUTURE_MATCH without filters → show future message and cards" time="0.237">
+    </testcase>
+    <testcase classname="Results Component-EXACT_MATCH with filters → show filters and cards" name="Results Component-EXACT_MATCH with filters → show filters and cards" time="0.344">
+    </testcase>
+    <testcase classname="Results Component-NO_MATCH with filters → build dynamic no-results message" name="Results Component-NO_MATCH with filters → build dynamic no-results message" time="0.197">
+    </testcase>
+    <testcase classname="Results Component-should toggle filters panel" name="Results Component-should toggle filters panel" time="0.189">
+    </testcase>
+    <testcase classname="Results Component-should apply filters and call state service" name="Results Component-should apply filters and call state service" time="0.12">
+    </testcase>
+    <testcase classname="Results Component-should clear filters" name="Results Component-should clear filters" time="0.17">
+    </testcase>
+    <testcase classname="Results Component-should participate in ride" name="Results Component-should participate in ride" time="0.186">
+    </testcase>
+    <testcase classname="Results Component-should cancel participation" name="Results Component-should cancel participation" time="0.181">
+    </testcase>
+    <testcase classname="Results Component-should toggle ride details" name="Results Component-should toggle ride details" time="0.178">
+    </testcase>
+    <testcase classname="Results Component-should return correct star type" name="Results Component-should return correct star type" time="0.132">
+    </testcase>
+    <testcase classname="Results Component-performSearch should call searchRideService with correct payload" name="Results Component-performSearch should call searchRideService with correct payload" time="0.112">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/errors/not-found/not-found.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:40" time="1.178" tests="1">
+    <testcase classname="NotFound-should create" name="NotFound-should create" time="0.114">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/my-space/my-space.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:40" time="1.155" tests="1">
+    <testcase classname="MySpace-should create" name="MySpace-should create" time="0.095">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/legal-mentions/legal-mentions.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:40" time="1.316" tests="1">
+    <testcase classname="LegalMentions-should create" name="LegalMentions-should create" time="0.131">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/login/login.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:40" time="1.176" tests="1">
+    <testcase classname="Login-should create" name="Login-should create" time="0.101">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/app/pages/contact/contact.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-01-27T18:29:41" time="0.844" tests="1">
+    <testcase classname="Contact-should create" name="Contact-should create" time="0.076">
+    </testcase>
+  </testsuite>
+</testsuites>

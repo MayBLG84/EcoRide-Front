@@ -1,17 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SearchBar } from './search-bar';
-import { provideRouter, Routes } from '@angular/router';
+import { provideRouter, Routes, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { Results } from '../../pages/results/results';
 import { ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { SearchService } from '../../services/search-ride';
+import { SearchBar } from './search-bar';
+import { Results } from '../../pages/results/results';
+import { CityService } from '../../services/city';
 import { of } from 'rxjs';
 
-// Mock do SearchService
-class MockSearchService {
-  search() {
-    return of([]); // retorna um observable vazio
+class MockCityService {
+  searchCities() {
+    return of([]);
   }
 }
 
@@ -19,19 +17,20 @@ describe('SearchBar', () => {
   let fixture: ComponentFixture<SearchBar>;
   let component: SearchBar;
   const routes: Routes = [{ path: 'results', component: Results }];
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchBar, Results, ReactiveFormsModule],
-      providers: [
-        provideRouter(routes),
-        provideHttpClientTesting(),
-        { provide: SearchService, useClass: MockSearchService },
-      ],
+      imports: [SearchBar, ReactiveFormsModule],
+      providers: [provideRouter([]), { provide: CityService, useClass: MockCityService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchBar);
     component = fixture.componentInstance;
+
+    router = TestBed.inject(Router);
+    jest.spyOn(router, 'navigate').mockResolvedValue(true);
+
     fixture.detectChanges();
   });
 
@@ -68,23 +67,20 @@ describe('SearchBar', () => {
     expect(button.textContent).toContain('Recherche');
   });
 
-  it('should navigate to results page on valid submit', async () => {
+  it('should navigate to results page on valid submit', () => {
     resetSearchBar();
-    const harness = await RouterTestingHarness.create();
 
     component.form.get('originCity')?.setValue('Paris');
     component.form.get('destinyCity')?.setValue('Lyon');
     component.form.get('date')?.setValue({ year: 2025, month: 12, day: 25 });
+
     fixture.detectChanges();
 
     const form = fixture.nativeElement.querySelector('form');
     form.dispatchEvent(new Event('submit'));
     fixture.detectChanges();
 
-    await harness.navigateByUrl('/results', Results);
-    const routedNativeElement = await harness.routeNativeElement;
-    expect(routedNativeElement).not.toBeNull();
-    expect(routedNativeElement!.textContent).toContain('results works!');
+    expect(router.navigate).toHaveBeenCalledWith(['/results']);
   });
 
   it('should show errors if all inputs are invalid', () => {

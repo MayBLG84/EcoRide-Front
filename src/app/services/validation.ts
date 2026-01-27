@@ -63,10 +63,14 @@ export class ValidationService {
 
     const { year, month, day } = date;
 
-    if (!year || !month || !day) return false;
+    if (!year || year < 1) return false;
+    if (!month || month < 1 || month > 12) return false;
+    if (!day || day < 1 || day > 31) return false;
 
     const jsDate = new Date(year, month - 1, day);
-    return jsDate instanceof Date && !isNaN(jsDate.getTime());
+    return (
+      jsDate.getFullYear() === year && jsDate.getMonth() + 1 === month && jsDate.getDate() === day
+    );
   }
 
   /** Validate age (18+) */
