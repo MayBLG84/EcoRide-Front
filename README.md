@@ -1,17 +1,35 @@
 # EcoRide Frontend
 
-This project is the **frontend application of EcoRide**, a carpooling platform developed as part of the  
-**ECF (Évaluation des Compétences Finales)** for the _Graduate Developer_ program at **Studi**.
+This project is the **frontend application of EcoRide**, a carpooling platform developed as part of the
+**ECF (Évaluation des Compétences Finales)** for the _Graduate Développeur Angular 2023–2029_ program at Studi.
 
-The project was generated using **Angular CLI 20.3.4** and is built with **Angular 20** using a  
-**standalone component architecture**.
+The application was generated using **Angular CLI 20.3.4** and is built with **Angular 20**, following a **standalone component architecture**.
 
-The frontend communicates with a backend REST API developed with **Symfony** and focuses on providing
-a clear, accessible, and role-based user interface.
+The frontend communicates with a REST API developed with **Symfony** and focuses on providing a clear, accessible, and role-based user interface.
 
----
+### 🚀 Quick Start (Local Installation)
 
-## 🚀 Tech Stack
+Steps to run the project locally:
+
+1. Clone the repository
+   `git clone https://github.com/MayBLG84/EcoRide-Front.git`
+
+2. Navigate into the project directory
+   `cd EcoRide-Front`
+
+3. Install dependencies
+   `npm install`
+
+4. Start the development server
+   `ng serve`
+   (or `npm start`)
+
+5. Open your browser at
+   `http://localhost:4200`
+
+⚠️ The frontend can start without the backend, but API calls will fail if the backend is not running.
+
+### 🚀 Tech Stack
 
 **Framework & Language**
 
@@ -25,9 +43,9 @@ a clear, accessible, and role-based user interface.
 - SCSS
 - Bootstrap 5
 - Bootstrap Icons
-- @ng-bootstrap/ng-bootstrap (for ngbDatePicker and other UI components)
-- ngx-bootstrap (optional, additional Bootstrap components)
-- @angular-slider/ngx-slider (slider UI components)
+- @ng-bootstrap/ng-bootstrap (date picker and UI components)
+- ngx-bootstrap (optional additional Bootstrap components)
+- @angular-slider/ngx-slider (slider components)
 
 **Reactive Programming**
 
@@ -36,189 +54,189 @@ a clear, accessible, and role-based user interface.
 **Testing**
 
 - Jest (unit testing)
-- @testing-library/angular (unit testing utilities)
+- @testing-library/angular
 
 **Runtime / Environment**
 
-- Node.js / npm
+- Node.js
+- npm
 
----
+### ✅ Prerequisites
 
-## 📁 Project Structure
-
-The application follows a **standalone architecture** (no `NgModule`).
-
-src/
-├── app/
-│ ├── components/ # Reusable UI components
-│ │ ├── big-title
-│ │ ├── footer
-│ │ ├── header
-│ │ └── search-bar
-│ ├── models/ # Domain models and interfaces
-│ ├── pages/ # Routed views
-│ │ ├── home
-│ │ ├── login
-│ │ ├── signup
-│ │ ├── results
-│ │ ├── my-space
-│ │ ├── contact
-│ │ ├── legal-mentions
-│ │ └── errors
-│ ├── services/ # HTTP services (API communication)
-│ ├── app.config.ts # Global providers configuration
-│ ├── app.routes.ts # Application routing
-│ └── app.ts # Root standalone component
-├── assets/ # Static assets
-├── styles/ # Global SCSS styles
-├── index.html
-└── main.ts # Application bootstrap
-
----
-
-## 🧩 Architecture Overview
-
-This frontend is built using **Angular standalone components**:
-
-- All components are declared with `standalone: true`
-- No `AppModule` is used
-- Global providers are defined in `app.config.ts`
-- Routing is configured in `app.routes.ts`
-- Each component explicitly imports its own dependencies
-
-This approach follows Angular modern best practices and improves modularity, readability, and maintainability.
-
----
-
-## 🔌 Frontend–Backend Communication
-
-The frontend communicates with the backend via **HTTP requests** using Angular services.
-
-- Protocol: **HTTP**
-- Data formats:
-  - `application/json`
-  - `multipart/form-data` (FormData)
-
-The backend exposes REST endpoints developed with **Symfony**.
-The frontend acts as the visual layer (views) and does not implement heavy business logic.
-
----
-
-## 🗄️ Data Management
-
-The frontend does not interact directly with the database.  
-All data persistence, validation, and business logic are handled by the backend API, which communicates with a relational database.
-
----
-
-## ✅ Prerequisites
-
-Before running the project locally, ensure you have the following installed:
+Before running the project locally, ensure the following tools are installed:
 
 - **Node.js** (recommended: LTS ≥ 18)
 - **npm**
 - **Angular CLI** (version 20)
 
-### Check Installed Versions
+Check installed versions:
 
-    bash:```
-    node -v
-    npm -v
-    ng version
-    ```
+- `node -v`
+- `npm -v`
+- `ng version`
 
-### Install Angular CLI (if not installed)
+Install Angular CLI (if not installed):
 
-bash: `npm install -g @angular/cli`
+- `npm install -g @angular/cli`
 
-## 📦 Installation
+### 📦 Installation
 
-1. Clone the repository:
+After cloning the repository:
 
-   `git clone <repository-url>`
-   `cd eco-ride-front`
+- Install dependencies
+  `npm install`
 
-2. Install dependencies:
+This will install Angular, Bootstrap, Jest, and all required development dependencies.
 
-   `npm install`
+### ⚙️ Environment Configuration
 
-This installs Angular, Bootstrap, Jest, and all required development dependencies.
+The application uses Angular environment files for configuration.
 
-## ⚙️ Environment Configuration
+Environment file location:
 
-Angular environment files are used to configure the application.
+- _src/environments/environment.ts_
 
-_Example:_
+Development environment example:
 
-```ts
-// src/environments/environment.ts
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8000/api',
-};
-```
+- `production: false`
+- `apiUrl: http://localhost:8000/api`
 
-- apiUrl must match the backend URL.
-- The frontend can start without the backend, but API calls will fail.
+Notes:
 
-### ▶️ Development Server
+- **apiUrl must match the backend URL**
+- If the backend is not running, the application UI will load but API requests will fail
 
-To start a local development server, run:`ng serve`
+### ▶️ Running the Application
 
-or:`npm start`
+Start the local development server:
 
-Once the server is running, open your browser and navigate to:
-'http://localhost:4200/'
+- `ng serve`
+  or
+- `npm start`
 
-The application automatically reloads when source files are modified.
+The application will be available at:
+`http://localhost:4200`
 
-### 🧱 Code Scaffolding
+The page automatically reloads when source files are modified.
 
-Angular CLI provides code scaffolding tools.
+### 📁 Project Structure
 
-To generate a new standalone component:`ng generate component component-name`
+The application follows a standalone architecture (no NgModule):
 
-For a full list of available schematics:`ng generate --help`
+- src/
+  - app/
+    - components/ – _reusable UI components_
+      - big-title
+      - footer
+      - header
+      - search-bar
+    - models/ – _domain models and interfaces_
+    - pages/ – _routed views_
+      - home
+      - login
+      - signup
+      - results
+      - my-space
+      - contact
+      - legal-mentions
+      - errors
+    - services/ – _HTTP services and API communication_
+    - app.config.ts – _global providers configuration_
+    - app.routes.ts – _application routing_
+    - app.ts – _root standalone component_
+  - assets/ – _static assets_
+  - styles/ – _global SCSS styles_
+  - index.html
+  - main.ts – _application bootstrap_
 
-### 🏗️ Building the Project
+### 🧩 Architecture Overview
 
-To build the project:`ng build`
+This frontend is built using **Angular standalone components**:
 
-The build artifacts are stored in the dist/ directory.
+- All components are declared with `standalone: true`
+- No _AppModule_ is used
+- Global providers are defined in _app.config.ts_
+- Routing is configured in _app.routes.ts_
+- Each component explicitly imports its own dependencies
+
+This approach follows modern Angular best practices and improves modularity, readability, and maintainability.
+
+### 🔌 Frontend–Backend Communication
+
+The frontend communicates with the backend via HTTP requests using Angular services.
+
+- Protocol: **HTTP**
+- Data formats:
+  - _application/json_
+  - _multipart/form-data_ (FormData)
+
+The backend exposes REST endpoints developed with **Symfony**.
+The frontend acts purely as the presentation layer and does not implement heavy business logic.
+
+### 🗄️ Data Management
+
+The frontend does not interact directly with the database.
+
+All data persistence, validation, and business logic are handled by the backend API, which communicates with a relational database.
+
+### 🧪 Testing
+
+Unit tests are configured using **Jest** (not Karma).
+
+Available commands:
+
+- Run all tests: `npm test`
+- Run tests in watch mode: `npm run test:watch`
+- Run tests with coverage report: `npm run test:coverage`
+- Run tests in global (CI-friendly) mode: `npm run test:global`
+
+**Test Reports**
+The _test:global_ script is designed for CI pipelines or global test execution:
+
+- Tests are executed sequentially using --runInBand
+- A test report in **XML format** is generated
+- Reports are saved in: reports/jest
+
+This setup allows integration with CI tools and test report analyzers.
+
+### 🏗️ Build
+
+To build the project for production:
+
+- `ng build`
+
+The build artifacts are stored in the _dist/_ directory.
 Production builds are optimized for performance and speed.
-
-### 🧪 Running Unit Tests
-
-Unit tests are configured using Jest (not Karma).
-
-Run all tests:`npm test`
-
-Run tests in watch mode:`npm run test:watch`
-
-Generate test coverage:`npm run test:coverage`
 
 ### 🚫 End-to-End Tests
 
-End-to-end (e2e) testing is not configured by default in this project.
+End-to-end (e2e) testing is not configured by default.
+
 Angular CLI does not include an e2e framework automatically.
-If needed, a solution such as Cypress or Playwright can be added later.
+If needed, a solution such as **Cypress** or **Playwright** can be added later.
 
 ### ⚠️ Common Issues
 
-Port already in use
+**Port already in use**
 
-    `ng serve --port 4300`
+- `ng serve --port 4300`
 
-- API connection errors
-  - Ensure the backend is running
-  - Check the apiUrl value in the environment file
+**API connection errors**
+
+- Ensure the backend is running
+- Check the _apiUrl_ value in the environment file
 
 ### 🎯 Functional Scope
 
 The frontend implements the functional requirements defined in the project specifications and supports multiple user roles:
-Visitor, User, Employee, and Administrator.
 
-The frontend is responsible for:
+- Visitor
+- Passenger
+- Driver
+- Employee
+- Administrator
+
+Frontend responsibilities:
 
 - Displaying data provided by the backend
 - Managing navigation and user flows
@@ -230,34 +248,40 @@ The frontend is responsible for:
 
 **Visitor**
 
-- Home page with company presentation and images
-- Search bar for carpooling itineraries
+- Home page with company presentation
+- Carpooling search bar
 - Navigation menu (home, carpooling, login, contact)
-- Carpooling search by city and date
+- Search by city and date
 - Results list with filters (price, duration, rating, ecological trip)
-- Detailed view of a carpooling trip
+- Carpooling trip details
 - Account creation with secure password
 
-**User**
+**Passenger**
 
-- Participation in a carpool (with seat and credit verification)
+- Participation in a carpool with seat and credit verification
 - Double confirmation before booking
-- Personal space (driver, passenger, or both)
-- Vehicle and preferences management
-- Trip creation as a driver
+- Personal space
 - Carpooling history and cancellation
-- Trip start and end actions
 - Post-trip confirmation and review submission
+- Same account cancellation capabilities as Passenger
+
+**Driver**
+
+- Ride creation
+- Carpooling history and cancellation
+- Vehicle and preferences management
+- Trip start and end actions
+- Account cancellation by the user
 
 **Employee**
 
 - Validation or rejection of driver reviews
-- Access to trips reported as problematic
+- Access to reported trips
 
 **Administrator**
 
 - Employee account creation
-- Statistics dashboards (number of carpools, platform earnings)
+- Statistics dashboards
 - Suspension of user or employee accounts
 
 ### 🛠️ Development Tools
@@ -269,6 +293,15 @@ Recommended tools:
 - **Prettier**
 - **Node.js & npm**
 
+### 💻 OS Notes
+
+These instructions assume Linux (Ubuntu). For other operating systems:
+
+- Node.js, npm, PHP, and Symfony CLI installation may vary.
+- On Windows, use CMD/PowerShell and adjust paths accordingly.
+- Ensure MySQL and MongoDB are installed and running. Port numbers may differ.
+- Linux/macOS are case-sensitive for file paths.
+
 ### 🌍 Language
 
 - User interface: **French**
@@ -276,4 +309,4 @@ Recommended tools:
 
 ### 👤 Academic Context
 
-This frontend application was developed as part of the _Graduate Développeur Angular 2023-2029_ program at _Studi_, within the scope of the ECF (final competency evaluation).
+This frontend application was developed as part of the _Graduate Développeur Angular 2023–2029_ program at **Studi**, within the scope of the ECF (final competency evaluation).
