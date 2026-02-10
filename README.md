@@ -22,7 +22,7 @@ Steps to run the project locally:
 
 4. Start the development server
    `ng serve`
-   (or `npm start`)
+   (or `npm run start:local`)
 
 5. Open your browser at
    `http://localhost:4200`
@@ -112,7 +112,7 @@ Start the local development server:
 
 - `ng serve`
   or
-- `npm start`
+- `npm run start:local`
 
 The application will be available at:
 `http://localhost:4200`

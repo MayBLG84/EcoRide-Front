@@ -1,12 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { ValidationService } from '../../services/validation';
 import { City, CityService } from '../../services/city';
 import { SearchStateService } from '../../services/search-state';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-search-bar',
@@ -37,7 +39,7 @@ export class SearchBar implements OnDestroy {
     private router: Router,
     private searchState: SearchStateService,
     public validation: ValidationService,
-    private cityService: CityService
+    private cityService: CityService,
   ) {
     // Reactive form without built-in Angular validators
     // because validation is handled by ValidationService
@@ -59,7 +61,7 @@ export class SearchBar implements OnDestroy {
         filter(() => !this.selectingOrigin),
         filter((value) => typeof value === 'string' && value.length >= 3),
         switchMap((value) => this.cityService.searchCities(value)),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe((cities) => {
         this.originSuggestions = cities;
@@ -74,7 +76,7 @@ export class SearchBar implements OnDestroy {
         filter(() => !this.selectingDestiny),
         filter((value) => typeof value === 'string' && value.length >= 3),
         switchMap((value) => this.cityService.searchCities(value)),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe((cities) => {
         this.destinySuggestions = cities;

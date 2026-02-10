@@ -3,14 +3,15 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Ride, RideSearchResponse } from '../models/ride-search-response.model';
 import { RideSearchRequest } from '../models/ride-search-request.model';
+import { ApiService } from './api';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SearchRideService {
-  private apiUrl = 'http://localhost:8000/api/rides/search';
-
-  constructor(private http: HttpClient) {}
+export class SearchRideService extends ApiService {
+  constructor(private http: HttpClient) {
+    super();
+  }
 
   searchRides(request: RideSearchRequest): Observable<RideSearchResponse> {
     let params = new HttpParams();
@@ -38,6 +39,6 @@ export class SearchRideService {
       });
     }
 
-    return this.http.get<RideSearchResponse>(this.apiUrl, { params });
+    return this.http.get<RideSearchResponse>(`${this.apiUrl}/rides/search`, { params });
   }
 }

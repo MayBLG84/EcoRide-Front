@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-big-title',
   imports: [],
   templateUrl: './big-title.html',
-  styleUrl: './big-title.scss',
+  styleUrls: ['./big-title.scss'],
   standalone: true,
 })
 export class BigTitle {

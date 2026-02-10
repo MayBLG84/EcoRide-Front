@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, HostListener } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterModule, Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, CommonModule, RouterLinkActive],
+  imports: [RouterLink, CommonModule, RouterLinkActive, RouterModule],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
   standalone: true,
@@ -15,7 +15,10 @@ export class Header {
   userId = signal<string | null>(null);
   menuOpen = signal(false);
 
-  constructor(private authService: Auth, private router: Router) {}
+  constructor(
+    private authService: Auth,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.isLoggedIn.set(this.authService.isLoggedIn());

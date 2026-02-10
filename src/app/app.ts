@@ -1,4 +1,3 @@
-import '@angular/localize/init';
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from './components/header/header';
@@ -13,8 +12,9 @@ registerLocaleData(localeFr);
   selector: 'app-root',
   imports: [RouterOutlet, Header, Footer],
   templateUrl: './app.html',
-  styleUrl: './app.scss',
+  styleUrls: ['./app.scss'],
   providers: [{ provide: LOCALE_ID, useValue: 'fr-FR' }],
+  standalone: true,
 })
 export class App {
   protected readonly title = signal('EcoRide-Front');

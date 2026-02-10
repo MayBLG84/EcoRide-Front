@@ -15,7 +15,7 @@ import { RouterLinkWithHref } from '@angular/router';
   selector: 'app-signup',
   imports: [BigTitle, NgbDatepickerModule, ReactiveFormsModule, CommonModule, RouterLinkWithHref],
   templateUrl: './signup.html',
-  styleUrl: './signup.scss',
+  styleUrls: ['./signup.scss'],
   standalone: true,
 })
 export class Signup implements OnDestroy {
