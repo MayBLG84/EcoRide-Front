@@ -1,6 +1,10 @@
 {
   "name": "eco-ride-front",
   "version": "0.0.0",
+  "engines": {
+    "node": "20.19.0",
+    "npm": "10.8.2"
+  },
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
