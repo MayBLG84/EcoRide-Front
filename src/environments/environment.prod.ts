@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://ecoride-backend.herokuapp.com/api', // change when you have the right URL
+  apiUrl: 'https://ecoride-backend-mblg-9481365eb49e.herokuapp.com/api',
 };
