@@ -11,20 +11,12 @@ import { Auth } from '../../services/auth';
   standalone: true,
 })
 export class Header {
-  isLoggedIn = signal(false);
-  userId = signal<string | null>(null);
   menuOpen = signal(false);
 
   constructor(
-    private authService: Auth,
+    public authService: Auth,
     private router: Router,
   ) {}
-
-  ngOnInit() {
-    this.isLoggedIn.set(this.authService.isLoggedIn());
-    this.userId.set(this.authService.getUserId());
-    this.closeMenuIfDesktop();
-  }
 
   @HostListener('window:resize')
   onResize() {
@@ -39,10 +31,6 @@ export class Header {
     }
   }
 
-  toggleAuth() {
-    this.isLoggedIn.set(!this.isLoggedIn());
-  }
-
   toggleMenu() {
     this.menuOpen.set(!this.menuOpen());
   }
@@ -53,9 +41,21 @@ export class Header {
 
   logout() {
     this.authService.logout();
-    this.isLoggedIn.set(false);
-    this.userId.set(null);
     this.closeMenu();
     this.router.navigate(['/']);
+  }
+
+  // Helpers
+  isDriverOrPassenger() {
+    const r = this.authService.getRoles();
+    return r.includes('ROLE_DRIVER') || r.includes('ROLE_PASSENGER');
+  }
+
+  isAdmin() {
+    return this.authService.getRoles().includes('ROLE_ADMIN');
+  }
+
+  isEmployee() {
+    return this.authService.getRoles().includes('ROLE_EMPLOYEE');
   }
 }

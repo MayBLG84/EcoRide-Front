@@ -10,30 +10,64 @@
     <a [routerLink]="['']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
       >Accueil</a
     >
-    @if(isLoggedIn()) {
-    <a
-      [routerLink]="['/', userId, 'my-space']"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      >Mon espace</a
-    >
+    @if (authService.isLoggedIn() && isDriverOrPassenger()) {
+      <a
+        [routerLink]="['/', authService.getUserId(), 'my-space']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Mon espace</a
+      >
+      <a
+        [routerLink]="['/contact']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Contact</a
+      >
+    } @else if (authService.isLoggedIn() && isAdmin()) {
+      <a
+        [routerLink]="['/', authService.getUserId(), 'dashboard']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Dashboard</a
+      >
+      <a
+        [routerLink]="['/', authService.getUserId(), 'users']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Utilizateurs</a
+      >
+    } @else if (authService.isLoggedIn() && isEmployee()) {
+      <a
+        [routerLink]="['/', authService.getUserId(), 'evaluations']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Évaluations</a
+      >
+      <a
+        [routerLink]="['/', authService.getUserId(), 'contact-by-user']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Contact par utilisateur</a
+      >
+    } @else {
+      <a
+        [routerLink]="['/contact']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Contact</a
+      >
     }
-    <a
-      [routerLink]="['/contact']"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      >Contact</a
-    >
-    @if(isLoggedIn()) {
-    <a (click)="logout()">Déconnexion</a>
-    }@else {
-    <a
-      [routerLink]="['/login']"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      >Connexion</a
-    >
-    <button class="signup-btn" [routerLink]="['/signup']">S'inscrire</button>
+
+    @if (authService.isLoggedIn()) {
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    } @else {
+      <a
+        [routerLink]="['/login']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Connexion</a
+      >
+      <button class="signup-btn" [routerLink]="['/signup']">S'inscrire</button>
     }
   </nav>
   <!--Menu Burger-->
@@ -43,15 +77,33 @@
   <!--Menu Mobile-->
   <nav class="mobile-menu" [class.open]="menuOpen()">
     <a [routerLink]="['']" (click)="closeMenu()">Accueil</a>
-    @if(isLoggedIn()) {
-    <a [routerLink]="['/', userId, 'my-space']" (click)="closeMenu()">Mon espace</a>
+    @if (authService.isLoggedIn() && isDriverOrPassenger()) {
+      <a [routerLink]="['/', authService.getUserId(), 'my-space']" (click)="closeMenu()"
+        >Mon espace</a
+      >
+      <a [routerLink]="['/contact']" (click)="closeMenu()">Contact</a>
+    } @else if (authService.isLoggedIn() && isAdmin()) {
+      <a [routerLink]="['/', authService.getUserId(), 'dashboard']" (click)="closeMenu()"
+        >Dashboard</a
+      >
+      <a [routerLink]="['/', authService.getUserId(), 'users']" (click)="closeMenu()">Users</a>
+    } @else if (authService.isLoggedIn() && isEmployee()) {
+      <a [routerLink]="['/', authService.getUserId(), 'evaluations']" (click)="closeMenu()"
+        >Évaluations</a
+      >
+      <a [routerLink]="['/', authService.getUserId(), 'contact-by-user']" (click)="closeMenu()"
+        >Contact par utilisateur</a
+      >
+    } @else {
+      <a [routerLink]="['/contact']" (click)="closeMenu()">Contact</a>
     }
-    <a [routerLink]="['/contact']" (click)="closeMenu()">Contact</a>
-    @if(isLoggedIn()) {
-    <a (click)="logout()">Déconnexion</a>
-    }@else {
-    <a [routerLink]="['/login']" (click)="closeMenu()">Connexion</a>
-    <button class="signup-btn" [routerLink]="['/signup']" (click)="closeMenu()">S'inscrire</button>
+    @if (authService.isLoggedIn()) {
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    } @else {
+      <a [routerLink]="['/login']" (click)="closeMenu()">Connexion</a>
+      <button class="signup-btn" [routerLink]="['/signup']" (click)="closeMenu()">
+        S'inscrire
+      </button>
     }
   </nav>
 </header>

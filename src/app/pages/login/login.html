@@ -1,1 +1,72 @@
-<p>login works!</p>
+<app-big-title bigTitle="Connectez-vous !"></app-big-title>
+<section class="headline-container">
+  <h2>Votre trajet commence ici</h2>
+  <h5><em>Ensemble sur la voie verte</em></h5>
+</section>
+@if (backendErrorMessage) {
+  <section class="status-response-container">
+    <div class="status-response">
+      <p class="status-message">
+        {{ backendErrorMessage }}
+      </p>
+    </div>
+  </section>
+}
+<section class="login-container">
+  <form [formGroup]="form" (ngSubmit)="onLogin()">
+    <div class="login-content">
+      <!-- Email -->
+      <div class="form-field">
+        <label for="email">Adresse e-mail</label>
+        <input id="email" type="email" formControlName="email" placeholder="example@mail.fr" />
+        @if (showError('email')) {
+          <small class="error">{{ errorEmail }}</small>
+        }
+      </div>
+      <!-- Password -->
+      <div class="form-field password-field">
+        <label for="password">Mot de passe</label>
+        <div class="password-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+          />
+
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePassword()"
+            aria-label="Afficher le mot de passe"
+          >
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye' : 'bi-eye-slash'"></i>
+          </button>
+        </div>
+      </div>
+      <!-- HONEYPOT (invisible) -->
+      <input
+        type="text"
+        formControlName="honeypot"
+        class="honeypot-field"
+        autocomplete="off"
+        tabindex="-1"
+      />
+      <!-- TURNSTILE (placeholder for the future) -->
+      <div
+        id="turnstile-container"
+        class="turnstile-container"
+        [attr.data-sitekey]="siteKey"
+        data-callback="onTurnstileSuccess"
+        data-theme="light"
+      >
+        <!-- Render of widget Turnstile -->
+      </div>
+
+      <div class="form-field-btn">
+        <button class="btn login-btn" type="submit" [disabled]="!isFormValidAndCaptcha">
+          Connexion
+        </button>
+      </div>
+    </div>
+  </form>
+</section>
