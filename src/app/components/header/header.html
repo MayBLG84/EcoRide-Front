@@ -10,7 +10,7 @@
     <a [routerLink]="['']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
       >Accueil</a
     >
-    @if (authService.isLoggedIn() && isDriverOrPassenger()) {
+    @if (authService.isLoggedIn() && authService.isDriverOrPassenger()) {
       <a
         [routerLink]="['/', authService.getUserId(), 'my-space']"
         routerLinkActive="active"
@@ -23,7 +23,7 @@
         [routerLinkActiveOptions]="{ exact: true }"
         >Contact</a
       >
-    } @else if (authService.isLoggedIn() && isAdmin()) {
+    } @else if (authService.isLoggedIn() && authService.isAdmin()) {
       <a
         [routerLink]="['/', authService.getUserId(), 'dashboard']"
         routerLinkActive="active"
@@ -36,7 +36,7 @@
         [routerLinkActiveOptions]="{ exact: true }"
         >Utilizateurs</a
       >
-    } @else if (authService.isLoggedIn() && isEmployee()) {
+    } @else if (authService.isLoggedIn() && authService.isEmployee()) {
       <a
         [routerLink]="['/', authService.getUserId(), 'evaluations']"
         routerLinkActive="active"
@@ -77,17 +77,17 @@
   <!--Menu Mobile-->
   <nav class="mobile-menu" [class.open]="menuOpen()">
     <a [routerLink]="['']" (click)="closeMenu()">Accueil</a>
-    @if (authService.isLoggedIn() && isDriverOrPassenger()) {
+    @if (authService.isLoggedIn() && authService.isDriverOrPassenger()) {
       <a [routerLink]="['/', authService.getUserId(), 'my-space']" (click)="closeMenu()"
         >Mon espace</a
       >
       <a [routerLink]="['/contact']" (click)="closeMenu()">Contact</a>
-    } @else if (authService.isLoggedIn() && isAdmin()) {
+    } @else if (authService.isLoggedIn() && authService.isAdmin()) {
       <a [routerLink]="['/', authService.getUserId(), 'dashboard']" (click)="closeMenu()"
         >Dashboard</a
       >
       <a [routerLink]="['/', authService.getUserId(), 'users']" (click)="closeMenu()">Users</a>
-    } @else if (authService.isLoggedIn() && isEmployee()) {
+    } @else if (authService.isLoggedIn() && authService.isEmployee()) {
       <a [routerLink]="['/', authService.getUserId(), 'evaluations']" (click)="closeMenu()"
         >Évaluations</a
       >

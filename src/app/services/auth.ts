@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { UserLoginResponse } from '../models/user-login-response.model';
+import { computed } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -29,9 +30,25 @@ export class Auth {
     this.tokenSignal.set(token);
   }
 
+  isLoggedIn(): boolean {
+    return this.isLoggedInSignal();
+  }
+
+  isAdmin(): boolean {
+    return this.rolesSignal().includes('ROLE_ADMIN');
+  }
+
+  isEmployee(): boolean {
+    return this.rolesSignal().includes('ROLE_EMPLOYEE');
+  }
+
+  isDriverOrPassenger(): boolean {
+    return this.rolesSignal().some((r) => r === 'ROLE_DRIVER' || r === 'ROLE_PASSENGER');
+  }
+
   login(response: UserLoginResponse) {
     if (!response.token || !response.userId || !response.roles) {
-      throw new Error('Login response incompleto.');
+      throw new Error('Login response incomplete.');
     }
 
     localStorage.setItem('token', response.token);
@@ -55,20 +72,12 @@ export class Auth {
     this.isLoggedInSignal.set(false);
   }
 
-  isLoggedIn() {
-    return this.isLoggedInSignal();
-  }
-
   getUserId() {
     return this.userIdSignal();
   }
 
   getRoles() {
     return this.rolesSignal();
-  }
-
-  hasRole(role: string) {
-    return this.rolesSignal().includes(role);
   }
 
   getToken() {

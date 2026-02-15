@@ -44,18 +44,4 @@ export class Header {
     this.closeMenu();
     this.router.navigate(['/']);
   }
-
-  // Helpers
-  isDriverOrPassenger() {
-    const r = this.authService.getRoles();
-    return r.includes('ROLE_DRIVER') || r.includes('ROLE_PASSENGER');
-  }
-
-  isAdmin() {
-    return this.authService.getRoles().includes('ROLE_ADMIN');
-  }
-
-  isEmployee() {
-    return this.authService.getRoles().includes('ROLE_EMPLOYEE');
-  }
 }

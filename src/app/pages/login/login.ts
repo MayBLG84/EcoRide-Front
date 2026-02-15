@@ -160,9 +160,9 @@ export class Login implements OnInit {
       if (response.roles.includes('ROLE_DRIVER') || response.roles.includes('ROLE_PASSENGER')) {
         this.router.navigate(['/']);
       } else if (response.roles.includes('ROLE_ADMIN')) {
-        this.router.navigate(['/adm/dashboard']);
+        this.router.navigate(['/', response.userId, 'dashboard']);
       } else if (response.roles.includes('ROLE_EMPLOYEE')) {
-        this.router.navigate(['/emp/evaluations']);
+        this.router.navigate(['/', response.userId, 'evaluations']);
       }
     }
   }
