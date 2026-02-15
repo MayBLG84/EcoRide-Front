@@ -86,7 +86,9 @@
       <a [routerLink]="['/', authService.getUserId(), 'dashboard']" (click)="closeMenu()"
         >Dashboard</a
       >
-      <a [routerLink]="['/', authService.getUserId(), 'users']" (click)="closeMenu()">Users</a>
+      <a [routerLink]="['/', authService.getUserId(), 'users']" (click)="closeMenu()"
+        >Utilisateurs</a
+      >
     } @else if (authService.isLoggedIn() && authService.isEmployee()) {
       <a [routerLink]="['/', authService.getUserId(), 'evaluations']" (click)="closeMenu()"
         >Évaluations</a

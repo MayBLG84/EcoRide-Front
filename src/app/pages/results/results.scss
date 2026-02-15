@@ -94,6 +94,10 @@ h5 {
         flex: 1;
         text-align: center;
       }
+
+      @media (min-width: $breakpointMinWidth) {
+        width: 280px;
+      }
     }
 
     .btn-order-list {
@@ -340,6 +344,7 @@ h5 {
       flex-direction: row;
       justify-content: center;
       align-items: flex-start;
+      width: 280px;
     }
   }
 
