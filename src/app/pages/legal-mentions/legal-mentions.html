@@ -1,1 +1,117 @@
-<p>legal-mentions works!</p>
+<app-big-title bigTitle="Informez-vous !"></app-big-title>
+<section class="headline-container">
+  <h2>Mentions Légales - EcoRide</h2>
+  <h5><em>Ensemble sur la voie verte</em></h5>
+</section>
+<section class="legal-container">
+  <div class="section">
+    <h2>Éditeur de l'application</h2>
+    <p><strong>Nom de la société :</strong> EcoRide</p>
+    <p><strong>Adresse :</strong> 123 Rue de l'Étudiant, 75001 Paris, France</p>
+    <p><strong>Responsable légal :</strong> Mayara Barriento Lopes Geenens</p>
+    <p>
+      Pour nous contacter : utilisez la page
+      <a
+        [routerLink]="['/contact']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Contact</a
+      >
+      de l'application.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Hébergement</h2>
+    <p>L'application EcoRide est hébergée par :</p>
+    <p><strong>Nom de l'hébergeur :</strong> Heroku</p>
+    <p><strong>Adresse :</strong> San Francisco, CA, USA</p>
+    <p>
+      La base de données est gérée via <strong>MongoDB Atlas</strong> et
+      <strong>Clever Cloud</strong>, conformément au RGPD.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Propriété intellectuelle</h2>
+    <p>
+      Tous les contenus (textes, images, logos, code source) présents sur l'application EcoRide sont
+      protégés par le droit d'auteur. Toute reproduction totale ou partielle est interdite sans
+      autorisation.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Collecte et protection des données personnelles</h2>
+    <p>
+      EcoRide collecte certaines données personnelles pour permettre l'utilisation de l'application
+      : nom, prénom, pseudonyme, date de naissance, email, mot de passe, téléphone, type
+      d'utilisation, adresse (facultative), photo de profil (facultative), ainsi que les
+      informations relatives au véhicule (immatriculation, date de première immatriculation,
+      couleur, modèle, fabricant), parmi d’autres informations nécessaires à l’utilisation de
+      l'application.
+    </p>
+    <p>
+      Ces données sont traitées conformément au <strong>RGPD</strong> et ne sont jamais partagées
+      avec des tiers.
+    </p>
+    <p>
+      Les identifiants et jetons d'authentification sont stockés localement sur le terminal de
+      l'utilisateur pour permettre la persistance de la session. Ces informations ne sont jamais
+      partagées avec des tiers.
+    </p>
+    <p>
+      Chaque utilisateur peut demander la suppression de ses données via la page
+      <a
+        [routerLink]="['/contact']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Contact</a
+      >.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Paiements</h2>
+    <p>
+      Toutes les transactions effectuées dans l'application sont fictives et servent uniquement à
+      des fins pédagogiques.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Responsabilité</h2>
+    <p>
+      EcoRide ne peut être tenu responsable des informations échangées entre utilisateurs ni des
+      incidents survenant lors des trajets. L'application fournit une plateforme de mise en relation
+      et d'information uniquement.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Cookies et technologies similaires</h2>
+    <p>
+      L'application EcoRide n'utilise pas actuellement de cookies. Si nous décidons d'en utiliser
+      pour améliorer l'expérience utilisateur, cette information sera indiquée ici et les
+      utilisateurs pourront les désactiver.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Caractère éducatif et avertissement</h2>
+    <p>
+      EcoRide est un projet pédagogique réalisé dans le cadre d'un diplôme Bac+2 en développement
+      web. L'application peut présenter des bugs ou failles de sécurité et ne doit pas être utilisée
+      pour de vrais trajets ou transactions financières. Les utilisateurs sont invités à tester
+      l'application uniquement dans un contexte d'apprentissage.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Modification des mentions légales</h2>
+    <p>
+      Ces mentions légales peuvent être mises à jour pour se conformer à la législation et améliorer
+      l'expérience utilisateur.
+    </p>
+  </div>
+</section>

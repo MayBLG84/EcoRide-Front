@@ -1,43 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="EcoRide Frontend Tests" tests="18" failures="0" errors="0" time="4.899">
-  <testsuite name="src/app/services/contact.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-03-04T14:44:47" time="1.197" tests="2">
-    <testcase classname="ContactService-should be created" name="ContactService-should be created" time="0.047">
+<testsuites name="EcoRide Frontend Tests" tests="4" failures="0" errors="0" time="3.424">
+  <testsuite name="src/app/pages/legal-mentions/legal-mentions.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-03-04T16:27:58" time="1.661" tests="4">
+    <testcase classname="LegalMentions-should create the component" name="LegalMentions-should create the component" time="0.191">
     </testcase>
-    <testcase classname="ContactService-should call POST /contact" name="ContactService-should call POST /contact" time="0.016">
+    <testcase classname="LegalMentions-should render the main title" name="LegalMentions-should render the main title" time="0.047">
     </testcase>
-  </testsuite>
-  <testsuite name="src/app/pages/contact/contact.spec.ts" errors="0" failures="0" skipped="0" timestamp="2026-03-04T14:44:47" time="2.23" tests="16">
-    <testcase classname="Contact Component-should create the form with all controls" name="Contact Component-should create the form with all controls" time="0.355">
+    <testcase classname="LegalMentions-should contain a contact link" name="LegalMentions-should contain a contact link" time="0.044">
     </testcase>
-    <testcase classname="Contact Component-should mark form invalid if required fields are empty" name="Contact Component-should mark form invalid if required fields are empty" time="0.061">
-    </testcase>
-    <testcase classname="Contact Component-should require rideId only when shouldShowRideId is true" name="Contact Component-should require rideId only when shouldShowRideId is true" time="0.053">
-    </testcase>
-    <testcase classname="Contact Component-should disable submit button if form is invalid" name="Contact Component-should disable submit button if form is invalid" time="0.064">
-    </testcase>
-    <testcase classname="Contact Component-should enable submit button when form is valid" name="Contact Component-should enable submit button when form is valid" time="0.046">
-    </testcase>
-    <testcase classname="Contact Component-should call contactService.create on valid form submission" name="Contact Component-should call contactService.create on valid form submission" time="0.054">
-    </testcase>
-    <testcase classname="Contact Component-should mark all controls as touched if form is invalid" name="Contact Component-should mark all controls as touched if form is invalid" time="0.041">
-    </testcase>
-    <testcase classname="Contact Component-should block submission if honeypot is filled" name="Contact Component-should block submission if honeypot is filled" time="0.076">
-    </testcase>
-    <testcase classname="Contact Component-should block submission if turnstileToken is not ready" name="Contact Component-should block submission if turnstileToken is not ready" time="0.042">
-    </testcase>
-    <testcase classname="Contact Component-should include rideId in request only if visible and filled" name="Contact Component-should include rideId in request only if visible and filled" time="0.036">
-    </testcase>
-    <testcase classname="Contact Component-should convert attachments to FormData" name="Contact Component-should convert attachments to FormData" time="0.047">
-    </testcase>
-    <testcase classname="Contact Component-should add valid file to selectedFiles and form" name="Contact Component-should add valid file to selectedFiles and form" time="0.04">
-    </testcase>
-    <testcase classname="Contact Component-should remove file from selectedFiles and form" name="Contact Component-should remove file from selectedFiles and form" time="0.054">
-    </testcase>
-    <testcase classname="Contact Component-should set backendFormError if response is INVALID_*" name="Contact Component-should set backendFormError if response is INVALID_*" time="0.059">
-    </testcase>
-    <testcase classname="Contact Component-should set successMessage if response is SUCCESS" name="Contact Component-should set successMessage if response is SUCCESS" time="0.049">
-    </testcase>
-    <testcase classname="Contact Component-should set serverError if backend response missing" name="Contact Component-should set serverError if backend response missing" time="0.045">
+    <testcase classname="LegalMentions-should render all section headers" name="LegalMentions-should render all section headers" time="0.051">
     </testcase>
   </testsuite>
 </testsuites>

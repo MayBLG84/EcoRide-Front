@@ -1,0 +1,68 @@
+@use 'variables' as *;
+
+/* =========================
+   Headline
+========================= */
+.headline-container {
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.headline-container h2 {
+  font-family: $font-headline;
+  color: $primary;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+.headline-container h5 {
+  font-family: $font-content;
+  color: $secondary;
+}
+
+/* =========================
+   Legal mentions
+========================= */
+.legal-container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: $bg-dark;
+  font-family: $font-content;
+  line-height: 1.6;
+
+  .title {
+    text-align: center;
+    font-family: $font-headline;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: $primary;
+  }
+
+  .section {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      font-family: $font-headline;
+      margin-bottom: 0.8rem;
+      color: $bg-dark;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    a {
+      color: $primary !important;
+      text-decoration: underline;
+      &:hover {
+        font-weight: 600;
+      }
+    }
+  }
+}
