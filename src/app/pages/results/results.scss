@@ -105,6 +105,15 @@ h5 {
       font-family: $font-content;
       font-size: 14px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+      /* Force select native in the browsers */
+      -webkit-appearance: menulist;
+      -moz-appearance: menulist;
+      appearance: menulist;
+
+      background-color: white;
+      cursor: pointer;
+      padding-right: 30px;
     }
   }
 
@@ -310,7 +319,7 @@ h5 {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     gap: 20px;
     margin-bottom: 12px;
   }

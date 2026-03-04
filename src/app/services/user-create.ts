@@ -18,7 +18,7 @@ export class UserCreateService extends ApiService {
 
   checkNicknameExists(nickname: string): Observable<boolean> {
     return this.http
-      .get<{ exists: boolean }>(`${this.apiUrl}/users/nickname-exists?nick=${nickname}`)
+      .get<{ exists: boolean }>(`${this.apiUrl}/user/nickname-exists?nick=${nickname}`)
       .pipe(map((res) => res.exists));
   }
 }

@@ -9,7 +9,9 @@ The frontend communicates with a REST API developed with **Symfony** and focuses
 
 ### 🚀 Quick Start (Local Installation)
 
-Steps to run the project locally:
+You can run the project in **two ways**:
+
+A. Local installation (Git + npm, without Docker)
 
 1. Clone the repository
    `git clone https://github.com/MayBLG84/EcoRide-Front.git`
@@ -26,6 +28,26 @@ Steps to run the project locally:
 
 5. Open your browser at
    `http://localhost:4200`
+
+B. Using Docker
+
+I. Development container with hot-load
+
+1.  Ensure Docker is installed.
+2.  Start the container
+    `docker compose up --build`
+    - The project files are mounted into the container, enabling hot-reload.
+    - Angular will detect changes automatically without rebuilding the container.
+    - Accessible at: http://localhost:4200 .
+
+II. Pull pre-build image from Docker Hub (for reviewers or quick testing)
+
+1.  Pull image from Docker Hub:
+    `docker pull mblg/ecoride-front:dev`
+2.  Run the container:
+    `docker run -p 4200:4200 mblg/ecoride-front:dev`
+    - This option is suitable for reviewers or colleagues who want a ready-to-run container.
+    - Hot-reaload is **not available** in this mode; changes require rebuild and push.
 
 ⚠️ The frontend can start without the backend, but API calls will fail if the backend is not running.
 
@@ -61,7 +83,12 @@ Steps to run the project locally:
 - Node.js
 - npm
 
-### ✅ Prerequisites
+**Containerization**
+
+- Docker – containerized local development
+- Docker Compose – run the frontend locally with hot-reload
+
+### ✅ Prerequisites if you don't use Docker
 
 Before running the project locally, ensure the following tools are installed:
 
@@ -81,12 +108,18 @@ Install Angular CLI (if not installed):
 
 ### 📦 Installation
 
+A. If you don't use Docker
+
 After cloning the repository:
 
 - Install dependencies
   `npm install`
 
 This will install Angular, Bootstrap, Jest, and all required development dependencies.
+
+B. If you use Docker
+
+Take a look at que Quick Start -> Using Docker at the top of this document
 
 ### ⚙️ Environment Configuration
 
@@ -108,16 +141,24 @@ Notes:
 
 ### ▶️ Running the Application
 
-Start the local development server:
+1. If you didn't use Docker for the installation, start the local development server:
 
 - `ng serve`
   or
 - `npm run start:local`
 
-The application will be available at:
+2. If you cloned the repository from Git and have Docker installed:
+
+- `docker compose up --build`
+
+3. If you cloned the repository from git and pulled the pre-build Docker image from Docker Hub:
+
+- `docker run -p 4200:4200 mblg/ecoride-front:dev`
+
+In all cases, the application will be available at:
 `http://localhost:4200`
 
-The page automatically reloads when source files are modified.
+The page automatically reloads when source files are modified in the 1st and 2nd cases. In the 3rd case, changes require rebuild.
 
 ### 📁 Project Structure
 
@@ -219,12 +260,21 @@ If needed, a solution such as **Cypress** or **Playwright** can be added later.
 
 **Port already in use**
 
-- `ng serve --port 4300`
+- Local:
+  `ng serve --port 4300`
+- Docker:
+  update _docker-compose.yaml_ ports mapping, e.g., `"4300:4200"`
 
 **API connection errors**
 
 - Ensure the backend is running
 - Check the _apiUrl_ value in the environment file
+- Docker dev container: backend must be reachable inside container
+
+**Hot-reload not working**
+
+- Only works with local npm setup or Docker developement container
+- Pre-build Docker Hub images require rebuild
 
 ### 🎯 Functional Scope
 
@@ -294,6 +344,8 @@ Recommended tools:
 - **Node.js & npm**
 
 ### 💻 OS Notes
+
+**These notes apply only if you are running the project without Docker.**
 
 These instructions assume Linux (Ubuntu). For other operating systems:
 

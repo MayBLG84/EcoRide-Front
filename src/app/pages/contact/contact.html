@@ -1,1 +1,209 @@
-<p>contact works!</p>
+<app-big-title bigTitle="Contactez-nous !"></app-big-title>
+<section class="headline-container">
+  <h2>Votre message nous fait avancer</h2>
+  <h5><em>Ensemble sur la voie verte</em></h5>
+</section>
+@if (responseReceived) {
+  <section class="status-response-container">
+    <div class="status-response">
+      @if (successMessage) {
+        <div class="status-message">
+          <h2>Merci pour votre message !</h2>
+        </div>
+        <div class="field-messages">
+          <p>Nous vous répondrons dans les plus brefs délais.</p>
+        </div>
+      }
+      @if (backendFormError) {
+        <div class="status-message">
+          <h2>On a trouvé un petit souci dans votre formulaire</h2>
+        </div>
+        <div class="field-messages">
+          <p>
+            <strong>{{ backendFormError.label }}</strong>
+            {{ backendFormError.rules ? ' ' + backendFormError.rules : '' }}
+          </p>
+        </div>
+      }
+      @if (serverError) {
+        <div class="status-message">
+          <h2>Oups… quelque chose s'est mal passé</h2>
+        </div>
+        <div class="field-messages">
+          <p>Une erreur technique est survenue.</p>
+          <p>Veuillez réessayer un peu plus tard.</p>
+        </div>
+      }
+    </div>
+  </section>
+}
+<section class="contact-container">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- First Name -->
+    <div class="form-field">
+      <label for="firstName"
+        >Prénom<span class="field-info required">(champ obligatoire)</span></label
+      >
+      <input id="firstName" type="text" formControlName="firstName" />
+      @if (showError('firstName')) {
+        <small class="error">{{ errorFirstName }}</small>
+      }
+    </div>
+
+    <!-- Last Name -->
+    <div class="form-field">
+      <label for="lastName">Nom<span class="field-info required">(champ obligatoire)</span></label>
+      <input id="lastName" type="text" formControlName="lastName" />
+      @if (showError('lastName')) {
+        <small class="error">{{ errorLastName }}</small>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="form-field">
+      <label for="email"
+        >Adresse e-mail<span class="field-info required">(champ obligatoire)</span></label
+      >
+      <input id="email" type="email" formControlName="email" placeholder="example@mail.fr" />
+      @if (showError('email')) {
+        <small class="error">{{ errorEmail }}</small>
+      }
+    </div>
+
+    <!-- Motive -->
+    <div class="form-field">
+      <label for="reason"
+        >Motif du contact<span class="field-info required">(champ obligatoire)</span></label
+      >
+      <select id="reason" formControlName="reason" (change)="onReasonChange()">
+        <option value="">Sélectionnez</option>
+
+        @for (r of reasons; track r.label) {
+          <option [value]="r.value">{{ r.label }}</option>
+        }
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="detail">Détail<span class="field-info required">(champ obligatoire)</span></label>
+      <select id="detail" formControlName="detail">
+        @if (currentSubcategories.length === 0) {
+          <option value="">Sélectionnez d'abord une catégorie</option>
+        }
+
+        @for (d of currentSubcategories; track d) {
+          <option [value]="d">{{ d }}</option>
+        }
+      </select>
+    </div>
+    @if (shouldShowRideId()) {
+      <div class="form-field">
+        <label class="label-flex" for="rideId">
+          <div class="label-left">
+            <span class="label-text">ID du trajet</span>
+            <span
+              class="info-icon"
+              title="Vous trouverez cet identifiant dans Mon Espace, sous l'onglet Mes Trajets."
+              ><i class="bi bi-info-circle"></i
+            ></span>
+          </div>
+          <span class="field-info required">(champ obligatoire)</span>
+        </label>
+        <input
+          id="rideId"
+          type="text"
+          formControlName="rideId"
+          placeholder="Entrez l'ID du trajet"
+        />
+        @if (form.get('rideId')?.invalid && form.get('rideId')?.touched) {
+          <small class="error">Ce champ est obligatoire pour les voyages.</small>
+        }
+      </div>
+    }
+
+    <!-- Description -->
+    <div class="form-field">
+      <label for="description"
+        >Déscription<span class="field-info required">(champ obligatoire)</span></label
+      >
+      <textarea
+        id="description"
+        formControlName="description"
+        maxlength="1000"
+        placeholder="Décrivez votre demande..."
+      ></textarea>
+      @if (showError('email')) {
+        <small class="error">{{ errorDescription }}</small>
+      }
+    </div>
+
+    <!-- Attachments -->
+    <div class="form-field">
+      <p>
+        Pièces jointes
+        <span class="field-info optional">(optionnel)</span>
+      </p>
+
+      <!-- Real input -->
+      <input
+        id="attachments"
+        type="file"
+        accept=".pdf,.jpeg,.jpg,.png"
+        multiple
+        (change)="onFilesSelected($event)"
+        hidden
+      />
+
+      <!-- Custom button -->
+      <div class="attachments-picker">
+        <label
+          for="attachments"
+          class="btn attachments-btn"
+          [class.disabled]="selectedFiles.length >= maxFiles"
+          [attr.disabled]="selectedFiles.length >= maxFiles ? true : null"
+        >
+          Choisir des fichiers
+        </label>
+
+        <!-- File list -->
+        @if (selectedFiles.length > 0) {
+          <div class="file-list">
+            @for (file of selectedFiles; track file.name) {
+              <div class="file-item">
+                <span>{{ file.name }}</span>
+                <i class="bi bi-x-circle remove-file" (click)="removeFile(file)"></i>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Error -->
+      @if (showError('attachments')) {
+        <small class="error">{{ errorAttachments }}</small>
+      }
+    </div>
+    <!-- HONEYPOT (invisible) -->
+    <input
+      type="text"
+      formControlName="honeypot"
+      class="honeypot-field"
+      autocomplete="off"
+      tabindex="-1"
+    />
+    <!-- TURNSTILE (placeholder for the future) -->
+    <div
+      id="turnstile-container"
+      class="turnstile-container"
+      [attr.data-sitekey]="siteKey"
+      data-callback="onTurnstileSuccess"
+      data-theme="light"
+    >
+      <!-- Render of widget Turnstile -->
+    </div>
+
+    <!-- Submit -->
+    <div class="form-field-btn">
+      <button class="btn register-btn" type="submit" [disabled]="form.invalid">Enregistrer</button>
+    </div>
+  </form>
+</section>

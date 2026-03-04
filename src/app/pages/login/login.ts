@@ -50,7 +50,6 @@ export class Login implements OnInit {
 
     // Callback global Turnstile
     (window as any).onTurnstileSuccess = (token: string) => {
-      console.log('Turnstile token recebido:', token);
       this.turnstileToken = token;
       this.tokenReady = true;
     };
@@ -60,7 +59,6 @@ export class Login implements OnInit {
       (window as any).turnstile.render('#turnstile-container', {
         sitekey: this.siteKey,
         callback: (token: string) => {
-          console.log('Callback Turnstile:', token);
           this.turnstileToken = token;
           this.tokenReady = true;
         },
@@ -101,8 +99,6 @@ export class Login implements OnInit {
       honeypot: this.form.value.honeypot,
       turnstileToken: this.turnstileToken,
     };
-
-    console.log('Payload enviado ao backend:', request);
 
     this.loginService.login(request).subscribe({
       next: (res: UserLoginResponse) => this.handleResponse(res),
