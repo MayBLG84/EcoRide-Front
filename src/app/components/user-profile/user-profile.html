@@ -1,0 +1,79 @@
+<section class="header-container">
+  <button class="btn btn-header" (click)="toggleHeader()">
+    <img src="assets/user.png" alt="icon de profil" />
+    <span class="header-span">Mon profil</span>
+  </button>
+</section>
+@if (isHeaderOpen()) {
+  @if (user(); as user) {
+    <section class="personal-info">
+      <div class="user-grid">
+        <img
+          class="user-photo"
+          [src]="getUserImage(user)"
+          (error)="onImageError($event)"
+          alt="Image du profil"
+        />
+        <h6 class="user-label">Pseudo :</h6>
+        <p class="user-nickname">{{ user.nickname }}</p>
+        @if (isDriver()) {
+          <div class="driver-rating">
+            @for (s of [1, 2, 3, 4, 5]; track s) {
+              <i
+                [class.bi-star-fill]="getStarType(s, user.avgRating ?? null) === 'full'"
+                [class.bi-star-half]="getStarType(s, user.avgRating ?? null) === 'half'"
+                [class.bi-star]="getStarType(s, user.avgRating ?? null) === 'empty'"
+              ></i>
+            }
+          </div>
+        }
+      </div>
+      <div class="user-content">
+        <div class="item-user">
+          <h6>Nom :</h6>
+          <p>{{ user.lastName }}</p>
+        </div>
+        <div class="item-user">
+          <h6>Prénom :</h6>
+          <p>{{ user.firstName }}</p>
+        </div>
+        <div class="item-user">
+          <h6>Choix :</h6>
+          <p>{{ rolesText() }}</p>
+        </div>
+        <div class="item-user">
+          <h6>E-mail :</h6>
+          <p>{{ user.email }}</p>
+        </div>
+        <div class="item-user">
+          <h6>Téléphone :</h6>
+          <p>{{ user.telephone }}</p>
+        </div>
+        <div class="item-user">
+          <h6>Adresse :</h6>
+          @if (hasAddress()) {
+            <p>
+              {{ user.address?.number }},
+              {{ user.address?.street }}
+            </p>
+            @if (hasComplement()) {
+              <p>{{ user.address?.complement }}</p>
+            }
+            <p>
+              {{ user.address?.zipcode }} -
+              {{ user.address?.city }}
+            </p>
+            <p>{{ user.address?.country }}</p>
+          } @else {
+            <p>Adresse non renseignée</p>
+          }
+        </div>
+      </div>
+      <div class="form-field-btn">
+        <button class="btn update-btn" type="button" (click)="goToUpdate()">
+          Modifier mes informations
+        </button>
+      </div>
+    </section>
+  }
+}
