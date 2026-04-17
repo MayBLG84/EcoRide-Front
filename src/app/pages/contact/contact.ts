@@ -146,9 +146,18 @@ export class Contact implements OnInit {
       label: 'Votre email',
       rules: 'doit être une adresse valide (exemple : prenom.nom@email.com)',
     },
+    INVALID_ATTACHMENTS: {
+      label: 'Chaque fichier',
+      rules:
+        'doit avoir une taille maximale de 2 Mo, être au format PDF, JPG, JPEG ou PNG, et un maximum de 5 fichiers est autorisé',
+    },
 
     // ignored
     SUCCESS: { label: '' },
+
+    INVALID_CAPTCHA: {
+      label: '',
+    },
   };
 
   constructor(
