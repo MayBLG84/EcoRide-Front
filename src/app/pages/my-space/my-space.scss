@@ -1,0 +1,33 @@
+@use 'variables' as *;
+
+/* =========================
+   Headline
+========================= */
+.headline-container {
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.headline-container h2 {
+  font-family: $font-headline;
+  color: $primary;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+.headline-container h5 {
+  font-family: $font-content;
+  color: $secondary;
+}
+
+/* =========================
+   Content
+========================= */
+
+.my-space-fields-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

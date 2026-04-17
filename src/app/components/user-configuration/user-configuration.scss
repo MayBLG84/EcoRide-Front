@@ -1,0 +1,51 @@
+@use 'variables' as *;
+
+/* =========================
+   Header
+========================= */
+
+.header-container {
+  width: 880px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  font-family: $font-content;
+  font-size: 1rem;
+  font-weight: 600;
+  color: $primary;
+
+  @media (max-width: $breakpointMaxWidth) {
+    width: 280px;
+  }
+}
+
+.btn-header {
+  width: 100%;
+  padding: 20px 20px;
+  border-radius: 10px;
+  background-color: $tertiary;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+img {
+  width: 55px;
+}
+
+.header-span {
+  font-family: $font-headline;
+  font-size: 20px;
+  color: $bg-dark;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
